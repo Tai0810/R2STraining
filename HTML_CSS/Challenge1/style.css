@@ -1,0 +1,102 @@
+header{
+    background-color: aqua;
+}
+
+.usa-banner__inner{
+    display: flex;
+    align-items: center;
+}
+
+.usa-banner__header-action{
+    color: #1a4480;
+    margin-left: 10px;
+    text-decoration: underline;
+}
+
+.button-action{
+    margin-left: 10px;
+}
+
+.usa-banner-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.usa-search-inner{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.usa-search{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.usa-language-button-action{
+    margin: 5px;
+}
+
+.usa-nav__primary{
+    display: flex;
+    justify-content: space-between;
+}
+
+main{
+    background-color: blanchedalmond;
+}
+
+.welcome-box{
+    text-align: center;
+}
+
+.how-box{
+    text-align: center;
+}
+
+.how-button-list{
+    display: flex;
+    justify-content: space-between;
+}
+
+footer{
+    background-color: aquamarine;
+}
+
+.footer-navlink{
+    display: flex;
+    justify-content: space-around;
+}
+
+.usa-footer{
+    display: flex;
+    margin-right: 10px;
+}
+
+.usa-footer-sign-up{
+    margin: 5px;
+}
+
+.usa-footer-nav{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.footer-contact{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.footer-last-nav-list{
+    display: flex;
+    justify-content: space-around;
+    width: 500px;
+}
+
+ul{
+    list-style-type: none;
+}
