@@ -3,110 +3,90 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 400;
 }
 
-.logo-nav {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 100px;
+.header-content {
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 
-.logo-nav img {
-  height: 10%;
-  width: 10%;
+.logo img {
+  cursor: pointer;
 }
 
-nav {
-  width: 70%;
+.navbar {
+  width: 60%;
 }
 
-nav ul {
+.navbar-item {
   list-style: none;
   display: flex;
   padding: 20px;
   margin: 0;
   justify-content: space-evenly;
-  font-size: 16px;
 }
 
-nav ul li {
-  margin-left: 20px;
-}
-
-nav ul li a {
+.navbar-item a {
   text-decoration: none;
   color: #636363;
-  font-weight: bold;
 }
 
-.main-content {
-  display: flex;
-  position: relative;
+.navbar-item a:hover {
+  color: #127BBE;
+}
+
+.banner {
   background: url("./images/Base_Header.png") no-repeat center center/cover;
 }
 
-.section {
+.banner-content {
   display: flex;
   background-color: rgba(45, 63, 78, 0.5);
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
 }
 
-.left-section {
+.banner-content-left {
   color: #fff;
   width: 25%;
 }
 
-.left-section h1 {
+.banner-content-left h2 {
   font-size: 30px;
-  font-weight: 400;
 }
 
-.left-section p {
-  margin-top: 20px;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.left-section button {
+.banner-content-left button {
   margin-top: 20px;
   padding: 10px 20px;
   border-width: 2px;
   border: 2px solid #fefefe;
   color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 400;
   background-color: rgba(45, 63, 78, 0.5);
 }
 
-.right-section {
-  width: 25%;
-  text-align: center;
+.banner-content-right {
+  width: 20%;
   background-color: #127bbe;
   padding: 20px;
 }
-
-.find-customer {
-  text-align: left;
-}
-
-.find-customer h2 {
+.banner-content-right h2 {
   font-size: 24px;
-  font-weight: 400;
   color: #fff;
 }
 
-.find-customer p {
+.banner-content-right p {
   color: #fff;
   font-size: 13px;
 }
 
-form {
+.banner-content-right-form {
   width: 100%;
   background-color: #fff;
   border: 1px solid #979797;
@@ -116,40 +96,40 @@ form {
   margin-bottom: 50px;
 }
 
-.form-customer input {
-  width: 90%;
-  padding: 10px;
+.form-customer {
+  width: 100%;
   margin: 10px;
+}
+
+.form-customer input {
+  width: 85%;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #d3dde0;
 }
 
 .form-customer p {
-  margin-left: 10px;
   color: #636363;
   font-size: 12px;
-  font-weight: 400;
 }
 
-.form-customer button {
+.banner-content-right-form button {
   width: 100%;
   padding: 10px;
   border: 1px solid #d3dde0;
   background-color: #f1f4f5;
   color: #636363;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 400;
   text-align: left;
   display: flex;
   justify-content: space-between;
 }
 
-.form-customer button:hover {
+.banner-content-right-form button:hover {
   background-color: #92b7e2;
 }
 
-main {
+.main-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -157,27 +137,25 @@ main {
   margin: 20px;
 }
 
-main h2 {
+.main-content h2 {
   font-size: 24;
-  font-weight: 400;
   color: #2e2f30;
 }
 
-main h4 {
+.main-content-intro {
   font-size: 14;
-  font-weight: 400;
   color: #4a4a4a;
-  width: 25%;
   text-align: center;
+  width: 25%;
 }
 
-.service-list {
+.main-content-list {
   display: flex;
   flex-wrap: wrap;
   width: 50%;
 }
 
-.service-list-item {
+.main-content-list-item {
   flex: 1 1 calc(33.333% - 20px);
   padding: 20px;
   box-sizing: border-box;
@@ -188,19 +166,17 @@ main h4 {
   text-align: center;
 }
 
-.service-list-item h3 {
+.main-content-list-item h3 {
   font-size: 14px;
-  font-weight: 400;
   color: #2e2f30;
 }
 
-.service-list-item p {
+.main-content-list-item p {
   font-size: 14px;
-  font-weight: 400;
   color: #5a5956;
 }
 
-.service-icon {
+.main-content-icon {
   background-color: #127bbe;
   width: 60px;
   height: 60px;
@@ -208,15 +184,15 @@ main h4 {
   justify-content: center;
   align-items: center;
   font-size: 36px;
-  font-weight: 400;
   color: #fff;
   border-radius: 5px;
 }
 
-.service-more {
+.main-content-more {
   color: #127bbe;
-  width: 40%;
+  width: 50%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
