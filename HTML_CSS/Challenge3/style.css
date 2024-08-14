@@ -1,0 +1,260 @@
+body {
+  font-family: "Noto Sans", sans-serif;
+  background-color: rgb(122, 92, 250, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  color: #666666;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: left;
+}
+
+.container {
+  width: 760px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  justify-content: space-evenly;
+  width: 564px;
+  margin-top: 96px;
+  margin-bottom: 96px;
+}
+
+.form-userName-label,
+.form-password-label,
+.form-inputText-label,
+.form-dropdown-label {
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  margin-bottom: 5px;
+}
+
+.form-userName,
+.form-password,
+.form-inputText,
+.form-checkbox,
+.form-toggle,
+.form-radio,
+.form-dropdown,
+.form-buttons {
+  border: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.form-userName-input,
+.form-password-input {
+  display: block;
+  padding: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form-password-small {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.form-inputText-container {
+  position: relative;
+  width: 100%;
+}
+
+.form-inputText-message {
+  display: block;
+  padding: 16px;
+  border: 2px solid #EB5757;
+  border-radius: 8px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.form-inputText-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%); 
+  height: 20px; 
+  width: 20px; 
+}
+
+.form-inputText-error {
+  color: #EB5757;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.form-checkbox,
+.form-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.form-checkbox-input {
+  cursor: pointer;
+  accent-color: #7a5cfa;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.form-checkbox-label {
+  cursor: pointer;
+}
+
+.form-toggle-input {
+  display: none;
+}
+
+.form-toggle-label {
+  width: 49px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 32px;
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.form-toggle-label::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 32px;
+  background-color: white;
+  top: 3px;
+  left: 4px;
+  transition: transform 0.3s;
+}
+
+.form-toggle-input:checked + .form-toggle-label {
+  background-color: #7a5cfa;
+}
+
+.form-toggle-input:checked + .form-toggle-label::before {
+  transform: translateX(25px);
+}
+
+.form-radio-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.form-radio-input {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 32px;
+  position: relative;
+  border: 1px solid #cccccc;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.form-radio-input:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: #7a5cfa;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-radio-label {
+  cursor: pointer;
+}
+
+.dropdown-toggle {
+  display: none;
+}
+
+.dropdown-selected {
+  display: block;
+  padding: 16px;
+  width: 100%;
+  background-color: #fff;
+  color: #333;
+  border: 2px solid #7a5cfa;
+  border-radius: 8px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.dropdown-container {
+  width: 100%;
+}
+
+.dropdown-content {
+  display: none;
+  width: 100%;
+  border: 2px solid #7a5cfa;
+  border-radius: 8px;
+  background-color: #fff;
+  max-height: 168px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.dropdown-toggle:checked + .dropdown-container .dropdown-content {
+  display: block;
+}
+
+.dropdown-option {
+  padding: 16px;
+  cursor: pointer;
+  border: 1px solid #CCCCCC;
+}
+
+.dropdown-option:hover {
+  background-color: #7A5CFA;
+  color: #fff;
+}
+
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-buttons-cancel {
+  width: 172px;
+  background-color: transparent;
+  border: 1px solid #7a5cfa;
+  color: #7a5cfa;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form-buttons-next {
+  width: 172px;
+  background-color: #7a5cfa;
+  color: white;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

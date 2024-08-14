@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- 
+    Author: Võ Trọng Tài
+    Date: 13/8/2024
+    Filename: index.html
+    Figma: https://www.figma.com/design/HHYTMGSDmHFglblaQ90ddf/Flexible-Form-Template-(Community)?node-id=1-187&t=3uXpMEl1MmQ15dNX-0
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Challenge 3</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <form class="form">
+        <fieldset class="form-userName">
+          <label for="username" class="form-userName-label">Username</label>
+          <input
+            type="text"
+            id="username"
+            class="form-userName-input"
+            placeholder="Enter username"
+          />
+        </fieldset>
+
+        <fieldset class="form-password">
+          <label for="password" class="form-password-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-password-input"
+            placeholder="Enter password"
+          />
+          <small class="form-password-small"
+            >Your password is between 4 and 12 characters</small
+          >
+        </fieldset>
+
+        <fieldset class="form-inputText">
+          <label for="inputText" class="form-inputText-label"
+            >Input Text Label</label
+          >
+          <div class="form-inputText-container">
+            <input
+              type="text"
+              id="inputText"
+              class="form-inputText-message"
+              placeholder="Typing |"
+            />
+            <img src="./icon/Vector.png" alt="Icon" class="form-inputText-icon" />
+          </div>
+          <small class="form-inputText-error">
+            Error message informing me of a problem
+          </small>
+        </fieldset>
+
+        <fieldset class="form-checkbox">
+          <input type="checkbox" id="rememberMe" class="form-checkbox-input" />
+          <label for="rememberMe" class="form-checkbox-label"
+            >Remember me</label
+          >
+        </fieldset>
+
+        <fieldset class="form-toggle">
+          <input type="checkbox" id="toggle" class="form-toggle-input" />
+          <label for="toggle" class="form-toggle-label"></label>
+          <span>Off</span>
+        </fieldset>
+
+        <fieldset class="form-radio">
+          <div class="form-radio-item">
+            <input
+              type="radio"
+              name="radioSelection"
+              id="radio1"
+              class="form-radio-input"
+            />
+            <label for="radio1" class="form-radio-label"
+              >Radio selection 1</label
+            >
+          </div>
+          <div class="form-radio-item">
+            <input
+              type="radio"
+              name="radioSelection"
+              id="radio2"
+              class="form-radio-input"
+              checked
+            />
+            <label for="radio2" class="form-radio-label"
+              >Radio selection 2</label
+            >
+          </div>
+          <div class="form-radio-item">
+            <input
+              type="radio"
+              name="radioSelection"
+              id="radio3"
+              class="form-radio-input"
+            />
+            <label for="radio3" class="form-radio-label"
+              >Radio selection 3</label
+            >
+          </div>
+        </fieldset>
+
+        <fieldset class="form-dropdown">
+          <label for="dropdown-toggle" class="form-dropdown-label"
+            >Dropdown Title</label
+          >
+          <input type="checkbox" id="dropdown-toggle" class="dropdown-toggle" />
+          <div class="dropdown-container">
+            <label for="dropdown-toggle" class="dropdown-selected"
+              >Dropdown option</label
+            >
+            <div class="dropdown-content">
+              <div class="dropdown-option">Dropdown option</div>
+              <div class="dropdown-option">Dropdown option 1</div>
+              <div class="dropdown-option">Dropdown option 2</div>
+              <div class="dropdown-option">Dropdown option 3</div>
+              <div class="dropdown-option">Dropdown option 4</div>
+              <div class="dropdown-option">Dropdown option 5</div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-buttons">
+          <button type="button" class="form-buttons-cancel">Cancel</button>
+          <button type="submit" class="form-buttons-next">Next</button>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>
