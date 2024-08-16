@@ -1,0 +1,141 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('./Roboto/Roboto-Regular.ttf') format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./Roboto/Roboto-Bold.ttf') format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+header {
+  line-height: 16.41px;
+  background-color: #F5F6F7;
+}
+
+.logo {
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+.nav-link:hover {
+  color: #127BBE;
+}
+
+.banner {
+  background: url("../images/Base_Header.png") no-repeat center center/cover;
+}
+
+.banner-content {
+  width: 100%;
+  background-color: rgba(45, 63, 78, 0.5);
+}
+
+.banner-content-left {
+  color: #FAFAFA;
+}
+
+.banner-content-left-label {
+  font-size: 30px;
+}
+
+.banner-content-left-text {
+ font-size: 16px;
+}
+
+.button-banner {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: 2px solid #fefefe;
+  color: #fff;
+  cursor: pointer;
+  background-color: rgba(45, 63, 78, 0.5);
+}
+
+.form-customer {
+  background-color: #FFF;
+  border-radius: 5px 5px 0 0;
+}
+
+.banner-content-right {
+  background-color: #127BBE;
+  color: #FFF ;
+}
+
+.form-control {
+  border-radius: 2px;
+  color: #D3DDE0;
+}
+
+.main-content-label {
+  font-size: 24px;
+  color: #2e2f30;
+}
+
+.main-content-icon {
+  width: 62px;
+  height: 63px;
+  color: #FFF;
+  border-radius: 5px;
+  font-size: 36px;
+  background-color: #127bbe;
+}
+
+.main-content-intro {
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
+.main-content-more {
+  color: #127bbe;
+  cursor: pointer;
+}
+
+.btn {
+  border-radius: 0px;
+  background-color: #F1F4F5;
+  color: #636363;
+}
+
+.btn:hover {
+  background-color: rgb(65, 180, 201);
+}
+
+footer {
+  color: #5A5956;
+}
+
+.footer-service {
+  background-color: #F1F4F5;
+}
+
+.footer-service-label {
+  font-size: 24px;
+}
+
+.footer-contact {
+  background-color: #E7ECEE;
+}
+
+.footer-contact-text {
+  font-size: 13px;
+  color: #5A5956;
+}
+
+.footer-owner {
+  background-color: #353535;
+  color: #FFF;
+}
