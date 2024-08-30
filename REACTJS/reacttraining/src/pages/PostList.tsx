@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import movePostToTop from '../js/moveTop';
+import movePostToTop from '../utils/moveTop';
 
 const post1 = {
   userId: 1,
