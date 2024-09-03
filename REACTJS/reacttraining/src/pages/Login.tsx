@@ -1,86 +1,52 @@
 import { useCallback, useRef, useState } from "react";
 import { Input } from "../components";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { validateLoginForm, Errors } from "../utils/validation";
+import { btnLoginStyle, loginStyle } from "./styles";
 
 const Login = () => {
-  //Controlled component
+  // Controlled component
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  //Uncontroled component
-  // const usernameRef = useRef<HTMLInputElement>(null);
-  // const passwordRef = useRef<HTMLInputElement>(null);
+  // Uncontrolled component
   const inputsRefs = useRef<{ [key: string]: HTMLInputElement | null }>({
     username: null,
     password: null,
   });
-  const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
+  const [errors, setErrors] = useState<Errors>({});
 
-  const handleSubmit = useCallback(
-    (event: { preventDefault: any }) => {
-      // console.log("usernameRef", usernameRef);
-      // console.log("passwordRef", passwordRef);
-      event.preventDefault();
-      // console.log("username", username);
-      // console.log("password", password);
-      // if (usernameRef.current && passwordRef.current) {
-      //   const username = usernameRef.current.value;
-      //   const password = passwordRef.current.value;
-      //   console.log("username value", username);
-      //   console.log("password value", password);
-      // }
+  const handleSubmit = useCallback((event: { preventDefault: any }) => {
+    event.preventDefault();
 
-      // if(inputsRefs.current.username && inputsRefs.current.password){
-      //   const username = inputsRefs.current.username.value;
-      //   const password = inputsRefs.current.password.value;
-      //   console.log("username value", username);
-      //   console.log("password value", password);
-      // }
+    if (inputsRefs.current.username && inputsRefs.current.password) {
+      const usernameValue = inputsRefs.current.username.value;
+      const passwordValue = inputsRefs.current.password.value;
 
-      setErrors({});
+      const newErrors = validateLoginForm(usernameValue, passwordValue);
 
-      let isValid = true;
-      const newErrors: { username?: string; password?: string } = {};
+      setErrors(newErrors);
 
-      if (inputsRefs.current.username && inputsRefs.current.password) {
-        const usernameValue = inputsRefs.current.username.value.trim();
-        const passwordValue = inputsRefs.current.password.value;
-
-        if (!usernameValue) {
-          isValid = false;
-          newErrors.username = "Username is required.";
-        }
-
-        if (!passwordValue) {
-          isValid = false;
-          newErrors.password = "Password is required.";
-        } else if (passwordValue.length < 8) {
-          isValid = false;
-          newErrors.password = "Password must be at least 8 characters long.";
-        }
-
-        setErrors(newErrors);
-
-        if (isValid) {
-          console.log("Form submitted with:", { username: usernameValue, password: passwordValue });
-        }
+      if (Object.keys(newErrors).length === 0) {
+        console.log("Form submitted with:", {
+          username: usernameValue,
+          password: passwordValue,
+        });
       }
-    },
-    []
-  );
+    }
+  }, []);
 
-  const handleChangeData = useCallback(
-    (value: string, type: string) => {
-      if (type === "password") {
-        setPassword(value);
-      } else {
-        setUserName(value);
-      }
-    },
-    []
-  );
+  const handleChangeData = useCallback((value: string, type: string) => {
+    if (type === "password") {
+      setPassword(value);
+    } else {
+      setUserName(value);
+    }
+  }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit} style={loginStyle}>
       <Input
         label="Username"
         value={username}
@@ -96,8 +62,16 @@ const Login = () => {
         ref={(element) => (inputsRefs.current.password = element)}
         error={errors.password}
       />
-      <button type="submit">Login</button>
-    </form>
+      <Button
+        variant="contained"
+        disableElevation
+        color="success"
+        type="submit"
+        style={btnLoginStyle}
+      >
+        Login
+      </Button>
+    </Box>
   );
 };
 

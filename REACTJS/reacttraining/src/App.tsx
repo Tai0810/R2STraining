@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Example, PostList, Login } from "./pages";
+import { Example, PostList, Login, ListPost } from "./pages";
 
 function App() {
-  const [forceRerender, updateForceRerender] = useState(0);
   return (
-    <>
+    <div className="app">
       <Login/>
-      <Example name={{ value: "Example", id: 3 }} />
-      <button onClick={() => updateForceRerender(forceRerender + 1)}>
-        Force Rerender {forceRerender}
-      </button>
-      <PostList />
-    </>
+      <ListPost/>
+    </div>
   );
 }
 
