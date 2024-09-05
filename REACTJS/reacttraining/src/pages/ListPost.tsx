@@ -1,34 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Post from "../components/Post";
 import { fetchData } from "../utils/fetchData";
-
-interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
+import useApi from "../hooks/useApi";
+import { PostModel } from "../types/post";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 function ListPost() {
-  const [postsData, setPostsData] = useState<Post[]>([]);
+  const { data: postsData, setData: setPostsData } = useApi("/posts", []);
+  const auth = useSelector((state: any) => state.auth);
+  // console.log('state', state);
 
-  useEffect(() => {
-    const fetchListPost = async () => {
-      try {
-        const listPost = await fetchData();
-        setPostsData(listPost);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-    fetchListPost();
-  }, []);
-
+  // if (!auth.isLoggedIn) {
+  //   return <Navigate to="/login" replace={true} />;
+  // }
   return (
     <>
-      {postsData.map((post) => (
-        <Post key={post.id} postDetail={{ post, count: postsData.length }} />
-      ))}
+      {postsData.map((post: PostModel) =>
+        post ? (
+          <Post key={post.id} postDetail={{ post, count: postsData.length }} />
+        ) : null
+      )}
     </>
   );
 }

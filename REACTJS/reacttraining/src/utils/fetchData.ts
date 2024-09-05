@@ -1,6 +1,7 @@
-export const fetchData = async () => {
+const BASE_URL = 'https://jsonplaceholder.typicode.com/'
+export const fetchData = async (path: string) => {
   try {
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const response = await fetch(BASE_URL + path);
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);

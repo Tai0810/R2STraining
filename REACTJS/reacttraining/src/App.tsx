@@ -1,14 +1,31 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Example, PostList, Login, ListPost } from "./pages";
+import { Login, ListPost, PostDetail, Root } from "./pages";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    children: [
+      {
+        path: "",
+        element: <ListPost />,
+      },
+      {
+        path: "post/:postId",
+        element: <PostDetail />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
 
 function App() {
-  return (
-    <div className="app">
-      <Login/>
-      <ListPost/>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

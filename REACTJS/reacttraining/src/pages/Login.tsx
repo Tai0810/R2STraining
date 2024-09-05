@@ -4,11 +4,13 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { validateLoginForm, Errors } from "../utils/validation";
 import { btnLoginStyle, loginStyle } from "./styles";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   // Controlled component
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   // Uncontrolled component
   const inputsRefs = useRef<{ [key: string]: HTMLInputElement | null }>({
@@ -28,6 +30,10 @@ const Login = () => {
 
       setErrors(newErrors);
 
+      if (!newErrors.username && !newErrors.password) {
+        // dispatch(login);
+      }
+
       if (Object.keys(newErrors).length === 0) {
         console.log("Form submitted with:", {
           username: usernameValue,
@@ -46,32 +52,34 @@ const Login = () => {
   }, []);
 
   return (
-    <Box component="form" onSubmit={handleSubmit} style={loginStyle}>
-      <Input
-        label="Username"
-        value={username}
-        onChange={handleChangeData}
-        ref={(element) => (inputsRefs.current.username = element)}
-        error={errors.username}
-      />
-      <Input
-        label="Password"
-        type="password"
-        value={password}
-        onChange={handleChangeData}
-        ref={(element) => (inputsRefs.current.password = element)}
-        error={errors.password}
-      />
-      <Button
-        variant="contained"
-        disableElevation
-        color="success"
-        type="submit"
-        style={btnLoginStyle}
-      >
-        Login
-      </Button>
-    </Box>
+    <div className="app">
+      <Box component="form" onSubmit={handleSubmit} style={loginStyle}>
+        <Input
+          label="Username"
+          value={username}
+          onChange={handleChangeData}
+          ref={(element) => (inputsRefs.current.username = element)}
+          error={errors.username}
+        />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={handleChangeData}
+          ref={(element) => (inputsRefs.current.password = element)}
+          error={errors.password}
+        />
+        <Button
+          variant="contained"
+          disableElevation
+          color="success"
+          type="submit"
+          style={btnLoginStyle}
+        >
+          Login
+        </Button>
+      </Box>
+    </div>
   );
 };
 
