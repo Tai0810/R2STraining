@@ -1,16 +1,20 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "../components";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { validateLoginForm, Errors } from "../utils/validation";
 import { btnLoginStyle, loginStyle } from "./styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGIN } from "../store/actions";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
   // Controlled component
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const auth = useSelector((state: any) => state.auth);
 
   // Uncontrolled component
   const inputsRefs = useRef<{ [key: string]: HTMLInputElement | null }>({
@@ -31,7 +35,11 @@ const Login = () => {
       setErrors(newErrors);
 
       if (!newErrors.username && !newErrors.password) {
-        // dispatch(login);
+        dispatch({
+          type: LOGIN,
+          username,
+          password,
+        });
       }
 
       if (Object.keys(newErrors).length === 0) {
@@ -50,6 +58,10 @@ const Login = () => {
       setUserName(value);
     }
   }, []);
+
+  if (auth.isLoggedIn) {
+    return <Navigate to="/" replace={true} />;
+  }
 
   return (
     <div className="app">

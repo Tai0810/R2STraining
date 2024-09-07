@@ -4,3 +4,9 @@ export interface PostModel {
   title: string;
   body: string;
 }
+
+export type PostsState = {
+  list: Array<PostModel>;
+  loading: "idle" | "loading" | "success" | "failed";
+  error?: string;
+};

@@ -5,6 +5,8 @@ interface PostModel {
   title: string;
   body: string;
   id: number;
+  userId: number;
+  name?: string;
 }
 
 type Props = {
@@ -15,18 +17,17 @@ type Props = {
 };
 
 const Post = ({ postDetail }: Props) => {
-  // console.log('post render', postDetail.post.id);
-
   return (
     <div>
-      <Link to={'post/' + postDetail.post.id}>
+      <Link to={"post/" + postDetail.post.id}>
         <strong>{postDetail.post.title}</strong>
       </Link>
 
       <p>{postDetail.post.body}</p>
-      {/* {count && <p>{count}</p>} */}
+      {postDetail.post.name && <i>Author: {postDetail.post.name}</i>} {/* Hiển thị tên tác giả */}
     </div>
   );
 };
+
 
 export default memo(Post);
