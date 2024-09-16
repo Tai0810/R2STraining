@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Post from "../components/Post";
 import { PostModel } from "../types/post";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ function ListPost() {
 
   useEffect(() => {
     dispatch(fetchListPosts());
-    dispatch(fetchListUsers())
+    dispatch(fetchListUsers());
   }, [dispatch]);
 
   if (!auth.isLoggedIn) {
@@ -29,9 +29,10 @@ function ListPost() {
   if (posts.loading === "loading") {
     return <p> loading... </p>;
   }
+
   return (
     <>
-      {postIds.map((id: PostModel['id']) => {
+      {postIds.map((id: PostModel["id"]) => {
         const post = postsData[id];
         const postWithUser = post
           ? { ...post, name: userData[post.userId].name }
@@ -39,7 +40,8 @@ function ListPost() {
         return postWithUser ? (
           <Post
             key={postWithUser.id} // 1, 2, 3 1,
-            postDetail={{ post: postWithUser, count: postsData.length }}
+            post={postWithUser}
+            // postDetail={{ post: postWithUser, count: postsData.length }}
           />
         ) : null;
       })}
