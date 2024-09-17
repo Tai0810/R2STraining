@@ -1,50 +1,39 @@
-import React, { useCallback, useEffect, useState } from "react";
-import Post from "../components/Post";
+import { lazy, Suspense } from "react";
 import { PostModel } from "../types/post";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { fetchListPosts } from "../store/reducers/postsReducer";
-import { AppDispatch } from "../store";
-import { fetchListUsers } from "../store/reducers/usersReducer";
+import { Input } from "../components";
+import useFetchPost from "../hooks/useFetchPost";
+import useSearchPost from "../hooks/useSearchPost";
+
+const Post = lazy(() => import("../components/Post"));
 
 function ListPost() {
-  // const { data: postsData, setData: setPostsData } = useApi("/posts", []);
-  const dispatch = useDispatch<AppDispatch>();
-  const { auth, posts, users } = useSelector((state: any) => state);
-  const postIds = posts.ids ?? [];
-  const postsData = posts.data || {};
-  const userData = users.data;
-  console.log("auth", auth);
-  console.log("post", posts);
+  const { isLoggedIn, postIds, postsData, userData, isLoading } =
+    useFetchPost();
+  const { debounceSearch, searchResults } = useSearchPost();
 
-  useEffect(() => {
-    dispatch(fetchListPosts());
-    dispatch(fetchListUsers());
-  }, [dispatch]);
-
-  if (!auth.isLoggedIn) {
+  if (!isLoggedIn) {
     return <Navigate to="/login" replace={true} />;
   }
 
-  if (posts.loading === "loading") {
-    return <p> loading... </p>;
+  if (postIds.length === 0 && isLoading) {
+    return <p> loading ...</p>;
   }
 
   return (
     <>
-      {postIds.map((id: PostModel["id"]) => {
-        const post = postsData[id];
-        const postWithUser = post
-          ? { ...post, name: userData[post.userId].name }
-          : null;
-        return postWithUser ? (
-          <Post
-            key={postWithUser.id} // 1, 2, 3 1,
-            post={postWithUser}
-            // postDetail={{ post: postWithUser, count: postsData.length }}
-          />
-        ) : null;
-      })}
+      <Input label="Search" onChange={debounceSearch} />
+      <Suspense fallback={<p>Loading list ...</p>}>
+        {searchResults.map((id: PostModel["id"]) => {
+          const post = postsData[id];
+          const postWithUser = post
+            ? { ...post, name: userData[post.userId].name }
+            : null;
+          return postWithUser ? (
+            <Post key={postWithUser.id} post={postWithUser} />
+          ) : null;
+        })}
+      </Suspense>
     </>
   );
 }

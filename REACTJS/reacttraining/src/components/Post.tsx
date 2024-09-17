@@ -1,59 +1,22 @@
-import { ChangeEvent, memo, useCallback, useState } from "react";
+import { memo } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { EDIT_POST, DELETE_POST } from "../store/actions";
-
-type InputField = "body" | "author";
-
-interface PostModel {
-  title: string;
-  body: string;
-  id: number;
-  userId: number;
-  name?: string;
-}
+import useEditingPost, { PostModel } from "../hooks/useEditingPost";
 
 type Props = {
   post: PostModel;
 };
 
 const Post = ({ post }: Props) => {
-  const [editingField, setEditingField] = useState<InputField | null>(null);
-  const [changingInput, setChangingInput] = useState({
-    author: post.name || "",
-    body: post.body,
-  });
-
   const dispatch = useDispatch();
-
-  const handleChangeInput = useCallback(
-    (event: ChangeEvent<HTMLInputElement>, field: InputField) => {
-      setChangingInput((prevState) => ({
-        ...prevState,
-        [field]: event.target.value,
-      }));
-    },
-    []
-  );
-
-  const handleSave = useCallback(() => {
-    dispatch({
-      type: EDIT_POST,
-      payload: {
-        ...post,
-        body: changingInput.body,
-        name: changingInput.author,
-      },
-    });
-    setEditingField(null);
-  }, [dispatch, changingInput, post]);
-
-  const handleDelete = useCallback(() => {
-    dispatch({
-      type: DELETE_POST,
-      postId: post.id,
-    });
-  }, [dispatch, post.id]);
+  const {
+    editingField,
+    changingInput,
+    setEdingField,
+    handleChangeInput,
+    handleSave,
+    handleDelete
+  } = useEditingPost(post, dispatch);
 
   return (
     <div>
@@ -65,33 +28,41 @@ const Post = ({ post }: Props) => {
           <>
             <input
               type="text"
-              value={changingInput.body}
+              value={changingInput[editingField]}
               onChange={(e) => handleChangeInput(e, "body")}
             />
-            <button onClick={handleSave}>Lưu</button>
+            <button onClick={() => handleSave()}>Save</button>
           </>
         ) : (
-          <p onDoubleClick={() => setEditingField("body")}>{post.body}</p>
+          <p
+            onDoubleClick={() => {
+              setEdingField("body");
+            }}
+          >
+            {post.body}
+          </p>
         )}
       </div>
-      <div>
-        {editingField === "author" ? (
-          <>
-            <input
-              type="text"
-              value={changingInput.author}
-              onChange={(e) => handleChangeInput(e, "author")}
-            />
-            <button onClick={handleSave}>Lưu</button>
-          </>
-        ) : (
-          post.name && (
-            <i onDoubleClick={() => setEditingField("author")}>
-              Author: {post.name}
-            </i>
-          )
-        )}
-      </div>
+      {editingField === "author" ? (
+        <>
+          <input
+            type="text"
+            value={changingInput[editingField]}
+            onChange={(e) => handleChangeInput(e, "author")}
+          />
+          <button onClick={() => handleSave()}>Save</button>
+        </>
+      ) : (
+        post.name && (
+          <i
+            onDoubleClick={() => {
+              setEdingField("author");
+            }}
+          >
+            Author: {post.name}
+          </i>
+        )
+      )}
       <button onClick={handleDelete}>Delete</button>
     </div>
   );
@@ -104,4 +75,4 @@ const arePropsEqual = (prevProps: Props, nextProps: Props) => {
   );
 };
 
-export default memo(Post, arePropsEqual);
+export default memo(Post, arePropsEqual); // shallow compare

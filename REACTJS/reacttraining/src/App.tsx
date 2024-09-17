@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "./App.css";
 import { Login, ListPost, PostDetail, Root } from "./pages";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";

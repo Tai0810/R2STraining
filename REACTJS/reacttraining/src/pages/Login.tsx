@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Input } from "../components";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,11 +13,10 @@ const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const auth = useSelector((state: any) => state.auth);
 
   // Uncontrolled component
-  const inputsRefs = useRef<{ [key: string]: HTMLInputElement | null }>({
+  const inputsRefs = useRef<{ [key: string]: HTMLInputElement | null }>({ 
     username: null,
     password: null,
   });
@@ -51,13 +50,16 @@ const Login = () => {
     }
   }, []);
 
-  const handleChangeData = useCallback((value: string, type: string) => {
-    if (type === "password") {
-      setPassword(value);
-    } else {
-      setUserName(value);
-    }
-  }, []);
+  const handleChangeData = useCallback(
+    (value: string, type?: string) => {
+      if (type === 'password') {
+        setPassword(value);
+      } else {
+        setUserName(value);
+      }
+    },
+    [setPassword]
+  );
 
   if (auth.isLoggedIn) {
     return <Navigate to="/" replace={true} />;

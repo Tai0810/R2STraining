@@ -1,7 +1,11 @@
-import { Action, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
+import { PostsState, PostModel, PostsDataObject } from "./../../types/post";
+import { Action } from "redux";
 import { fetchData } from "../../utils/fetchData";
-import { PostModel, PostsDataObject, PostsState } from "../../types/post";
-import { DELETE_POST, EDIT_POST } from "../actions";
+import { DELETE_POST, EDIT_POST } from "./../actions";
 
 export const fetchListPosts = createAsyncThunk(
   "posts/fetchListPosts",
@@ -60,33 +64,20 @@ const postsSlice = createSlice({
         state.ids = [...state.ids, ...ids];
         state.error = action.payload?.error as string;
         state.loading = "succeed";
-      });
-    builder
+      })
       .addCase(fetchListPosts.rejected, (state, action) => {
         state.loading = "failed";
       })
       .addCase<string, ActionType>(EDIT_POST, (state, action) => {
-        const post = state.data[action.postId];
-        if (post) {
-          state.data[action.postId] = {
-            ...post,
-            body: action.changingInput.body,
-            name: action.changingInput.name,
-          };
-        } else {
-          console.error(`Post with id ${action.postId} not found.`);
-        }
+        state.data[action.postId] = {
+          ...state.data[action.postId],
+          body: action.changingInput.body,
+        };
       })
-      .addCase<string, ActionType>(
+      .addCase<string, Action<string> & { postId: number }>(
         DELETE_POST,
         (state, action) => {
-          const { postId } = action;
-          if (state.data[postId]) {
-            delete state.data[postId];
-            state.ids = state.ids.filter(id => id !== postId);
-          } else {
-            console.error(`Post with id ${postId} not found.`);
-          }
+          state.ids = state.ids.filter((id) => id !== action.postId);
         }
       );
   },
