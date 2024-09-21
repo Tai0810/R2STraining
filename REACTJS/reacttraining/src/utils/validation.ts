@@ -3,7 +3,7 @@ export type Errors = {
   password?: string;
 };
 
-export const validateLoginForm = (username: string, password: string): Errors => {
+export const validateLoginForm = (username?: string, password?: string): Errors => {
   const errors: Errors = {};
 
   if (!username) {
