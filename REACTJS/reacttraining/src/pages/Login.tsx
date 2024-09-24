@@ -1,12 +1,12 @@
 import { useCallback, useRef, useState } from "react";
 import { Input } from "../components";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { validateLoginForm, Errors } from "../utils/validation";
-import { btnLoginStyle, loginStyle } from "./styles";
+import { loginStyle } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGIN } from "../store/actions";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import Button from './../components/Button';
 
 const Login = () => {
   // Controlled component
@@ -83,15 +83,7 @@ const Login = () => {
           ref={(element) => (inputsRefs.current.password = element)}
           error={errors.password}
         />
-        <Button
-          variant="contained"
-          disableElevation
-          color="success"
-          type="submit"
-          style={btnLoginStyle}
-        >
-          Login
-        </Button>
+        <Button label={'Login'} />
       </Box>
     </div>
   );

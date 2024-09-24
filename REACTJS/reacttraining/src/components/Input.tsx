@@ -4,6 +4,7 @@ import { inputStyles } from "./styles";
 
 type Props = {
   label: string;
+  placeholder?: string;
   type?: string;
   value?: string;
   onChange?: (value: string, type?: string) => void;
@@ -12,7 +13,14 @@ type Props = {
 
 const Input = forwardRef<HTMLInputElement, Props>(
   (
-    { label, type = "text", value = "", onChange, error = "" },
+    {
+      label,
+      type = "text",
+      value = "",
+      onChange,
+      error = "",
+      placeholder = "",
+    },
     ref
   ) => {
     const [currenValue, setCurrentValue] = useState(value);
@@ -21,8 +29,9 @@ const Input = forwardRef<HTMLInputElement, Props>(
       <TextField
         label={label}
         defaultValue={currenValue}
+        placeholder={placeholder}
         onChange={(e) => {
-          if (typeof onChange === 'function') {
+          if (typeof onChange === "function") {
             onChange(e.target.value);
           } else {
             setCurrentValue(e.target.value);
