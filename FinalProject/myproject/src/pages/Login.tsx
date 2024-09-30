@@ -73,7 +73,7 @@ const Login = () => {
           error={errors.email}
         />
         <Input
-          label="Password"
+          label="Password" 
           type="password"
           ref={(element) => (inputsRefs.current.password = element)}
           error={errMessage}

@@ -7,26 +7,44 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Button } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../store/reducers/productReducer";
+import { AppDispatch } from "../store";
 
-function createData(
-  id: number,
-  name: string,
-  avaliable: number,
-  sold: number,
-  category: string,
-  colors: string,
-  price: number
-) {
-  return { id, name, avaliable, sold, category, colors, price };
-}
+// function createData(
+//   id: number,
+//   name: string,
+//   avaliable: number,
+//   sold: number,
+//   category: string,
+//   colors: string,
+//   price: number
+// ) {
+//   return { id, name, avaliable, sold, category, colors, price };
+// }
 
-const rows = [
-  createData(1, "Test1", 5, 0, "cloth", "blue", 450000),
-  createData(2, "Test2", 5, 0, "cloth", "", 450000),
-  createData(3, "Test3", 5, 0, "cloth", "blue", 450000)
-];
+// const rows = [
+//   createData(1, "Test1", 5, 0, "cloth", "blue", 450000),
+//   createData(2, "Test2", 5, 0, "cloth", "", 450000),
+//   createData(3, "Test3", 5, 0, "cloth", "blue", 450000)
+// ];
 
 export default function Products() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const products = useSelector((state: any) => state.products?.entities || {});
+  const productIds = useSelector((state: any) => state.products?.ids || []);
+  const status = useSelector((state: any) => state.products.status);
+  const error = useSelector((state: any) => state.products.error);
+
+  React.useEffect(() => {
+    console.log(status);
+    
+    if (status === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, [status, dispatch]);
+
   return (
     <div style={{ width: "100vw", paddingRight: "20px" }}>
       <h1>Seller</h1>
@@ -45,20 +63,20 @@ export default function Products() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {productIds.map((id: string, index: number) => (
               <TableRow
-                key={row.name}
+                key={id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.id}
+                  {index + 1}
                 </TableCell>
-                <TableCell align="left">{row.name}</TableCell>
-                <TableCell align="left">{row.avaliable}</TableCell>
-                <TableCell align="left">{row.sold}</TableCell>
-                <TableCell align="left">{row.category}</TableCell>
-                <TableCell align="left">{row.colors}</TableCell>
-                <TableCell align="left">{row.price}</TableCell>
+                <TableCell align="left">{products[id].name}</TableCell>
+                <TableCell align="left">{products[id].avaliable}</TableCell>
+                <TableCell align="left">{products[id].sold}</TableCell>
+                <TableCell align="left">{products[id].category}</TableCell>
+                <TableCell align="left">{products[id].colors}</TableCell>
+                <TableCell align="left">{products[id].price}</TableCell>
                 <TableCell align="center">
                   <div>
                     <Button

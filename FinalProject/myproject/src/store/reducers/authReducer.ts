@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { LOGIN } from "../actions";
+import { LOGOUT } from "../actions";
 import { fetchJson } from "../api";
 
 const BASE_URL = "http://localhost:3000";
@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
   "login",
   async (userInfor: { email: string; password: string }) => {
     const authInfor = await fetchJson(BASE_URL + "/auth");
-    console.log("authInfor",authInfor);
+    console.log("authInfor", authInfor);
     return authInfor;
   }
 );
@@ -24,8 +24,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(LOGIN, (state, action) => {
-      state.isLoggedIn = true;
+    builder.addCase(LOGOUT, (state, action) => {
+      state.isLoggedIn = false;
     });
     builder.addCase(login.fulfilled, (state, action: any) => {
       console.log("state", state);
@@ -39,11 +39,11 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
       } else {
         state.isLoggedIn = false;
+        state.error = "Email or password is not correct";
       }
     });
     builder.addCase(login.rejected, (state, action) => {
       state.isLoggedIn = false;
-      state.error = "Email or password is not correct";
     });
   },
 });
