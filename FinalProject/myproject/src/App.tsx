@@ -1,5 +1,6 @@
 import './App.css';
-import { Login, Home, Categories, Color } from './pages';
+import { Drawer } from './components';
+import { Login, Categories, Color, Products } from './pages';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -8,16 +9,22 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/home",
-    element: <Home />,
-  },
-  {
-    path: "/categories",
-    element: <Categories />,
-  },
-  {
-    path: "/color",
-    element: <Color />,
+    path: "/",
+    element: <Drawer />,
+    children: [
+      {
+        path: "products",
+        element: <Products />,
+      },
+      {
+        path: "categories",
+        element: <Categories />,
+      },
+      {
+        path: "colors",
+        element: <Color />,
+      },
+    ],
   },
 ]);
 

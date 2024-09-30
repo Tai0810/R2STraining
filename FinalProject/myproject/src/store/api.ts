@@ -19,7 +19,7 @@ export async function fetchJson(url: string) {
 export async function updateJson(
   url: string,
   body: any,
-  method: "PUT" | "POST"
+  method: "PUT" | "POST" | "PATCH"
 ) {
   try {
     const response = await fetch(url, {
