@@ -20,15 +20,15 @@ export default function Products() {
     entities: products = {},
     ids: productIds = [],
     status,
-    error,
-    categories = [],  
-    colors = [],      
   } = useSelector((state: any) => state.product || {});
+
+  const { entities: colors = {} } = useSelector((state: any) => state.color);
+  const { entities: categories = {} } = useSelector((state: any) => state.category);
 
   const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
-  const [openAddDialog, setOpenAddDialog] = React.useState(false);  
-  const [newProduct, setNewProduct] = React.useState<any>(null);    
+  const [openAddDialog, setOpenAddDialog] = React.useState(false);
+  const [newProduct, setNewProduct] = React.useState<any>(null);
 
   React.useEffect(() => {
     if (status === "idle") {
@@ -47,11 +47,11 @@ export default function Products() {
 
   const handleAdd = () => {
     setNewProduct({
-      id: productIds.length + 1,  
+      id: productIds.length + 1,
       name: "",
       available: 0,
       sold: 0,
-      categoryId: 1,  
+      categoryId: 1,
       colors: [],
       price: 0,
     });
@@ -60,31 +60,40 @@ export default function Products() {
 
   const handleAddSave = (addedProduct: any) => {
     setOpenAddDialog(false);
-    console.log("Sản phẩm mới:", addedProduct);  
+    console.log("Sản phẩm mới:", addedProduct);
   };
 
-  const totalAvailable = productIds.reduce(
-    (acc: any, id: any) => acc + (products[id]?.available || 0),
-    0
-  );
-  const totalSold = productIds.reduce(
-    (acc: any, id: any) => acc + (products[id]?.sold || 0),
-    0
-  );
-  const revenue = productIds.reduce(
-    (acc: any, id: any) =>
-      acc + (products[id]?.price * products[id]?.sold || 0),
-    0
-  );
-  const totalProducts = productIds.length;
+  const totalAvailable = React.useMemo(() => {
+    return productIds.reduce(
+      (acc: any, id: any) => acc + (products[id]?.available || 0),
+      0
+    );
+  }, [productIds, products]);
+
+  const totalSold = React.useMemo(() => {
+    return productIds.reduce(
+      (acc: any, id: any) => acc + (products[id]?.sold || 0),
+      0
+    );
+  }, [productIds, products]);
+
+  const revenue = React.useMemo(() => {
+    return productIds.reduce(
+      (acc: any, id: any) =>
+        acc + (products[id]?.price * products[id]?.sold || 0),
+      0
+    );
+  }, [productIds, products]);
+
+  const totalProducts = React.useMemo(() => productIds.length, [productIds]);
 
   const headers = [
     { text: "No" },
     { text: "Name" },
     { text: "Available" },
     { text: "Sold" },
-    { text: "Category" },  
-    { text: "Colors" },    
+    { text: "Category" },
+    { text: "Colors" },
     { text: "Price" },
     { text: "Action" },
   ];
@@ -105,18 +114,17 @@ export default function Products() {
             display: "flex",
             justifyContent: "space-evenly",
             alignItems: "center",
-            textAlign: "center",
           }}
         >
-          <div style={totalField}>Total {totalProducts}</div>
-          <div style={totalField}>Available {totalAvailable}</div>
-          <div style={totalField}>Sold {totalSold}</div>
-          <div style={totalField}>Revenue {revenue.toLocaleString()}</div>
+          <div style={totalField}>Total: {totalProducts}</div>
+          <div style={totalField}>Available: {totalAvailable}</div>
+          <div style={totalField}>Sold: {totalSold}</div>
+          <div style={totalField}>Revenue: {revenue.toLocaleString()}</div>
           <Button
             label="Add"
             color="success"
             startIcon={<AddToPhotosIcon />}
-            onClick={handleAdd}  
+            onClick={handleAdd}
           />
         </div>
       </div>
@@ -134,8 +142,8 @@ export default function Products() {
           <TableBody
             products={products}
             productIds={productIds}
-            categories={categories}  
-            colors={colors}          
+            categories={categories}
+            colors={colors}
             onEdit={handleEdit}
           />
         </Table>
@@ -152,10 +160,10 @@ export default function Products() {
 
       {newProduct && (
         <AddProductDialog
-          open={openAddDialog}  
+          open={openAddDialog}
           onClose={() => setOpenAddDialog(false)}
           product={newProduct}
-          onSave={handleAddSave}  
+          onSave={handleAddSave}
         />
       )}
     </div>

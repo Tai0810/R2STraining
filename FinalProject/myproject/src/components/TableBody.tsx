@@ -12,21 +12,24 @@ const TableBody: React.FC<any> = ({
   colors,
   onEdit,
 }) => {
-  const getCategoryName = (categoryId: number) => {
-    const category = categories.find((cat: any) => cat.id === categoryId);
-    console.log("cat", category);
-    return category ? category.name : "Unknown Category";
+  const getCategoryNameById = (id: string) => {
+    const category = categories[id];
+    return category ? category.name : "Unknown";
   };
+  
 
-  const getColorNames = (colorIds: number[]) => {
-    return colorIds
-      .map((colorId) => {
-        console.log("Searching for color ID:", colorId); 
-        const color = colors.find((col: any) => col.id === colorId);
-        console.log("Found color:", color); 
-        return color ? color.name : "Unknown Color";
-      })
-      .join(", ");
+  const getColorNamesById = (colorIds: number[] = []) => {
+    if (colorIds.length === 0) {
+      return "No colors available";
+    } else if (colorIds.length === 1) {
+      const colorName = colors[colorIds[0]]?.name;
+      console.log("colorName", colorIds[0]);
+      return colorName ? colorName : "Unknown color";
+    } else {
+      return colorIds
+        .map((colorId) => colors[colorId]?.name || "Unknown")
+        .join(", ");
+    }
   };
 
   return (
@@ -40,12 +43,8 @@ const TableBody: React.FC<any> = ({
             <TableCell>{product.name}</TableCell>
             <TableCell>{product.available}</TableCell>
             <TableCell>{product.sold}</TableCell>
-            <TableCell>{getCategoryName(product.categoryId)}</TableCell>{" "}
-            <TableCell>
-              {getColorNames(product.colors)
-                ? product.colors.join(", ")
-                : "No colors available"}
-            </TableCell>
+            <TableCell>{getCategoryNameById(product.categoryId)}</TableCell>
+            <TableCell>{getColorNamesById(product.colorIds || [])}</TableCell>
             <TableCell>{product.price.toLocaleString()}</TableCell>
             <TableCell
               style={{ display: "flex", justifyContent: "space-evenly" }}

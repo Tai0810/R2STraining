@@ -15,8 +15,8 @@ interface Product {
   name: string;
   available: number;
   sold: number;
-  category: string;
-  colors: string;
+  category: number;
+  colors: number[];
   price: number;
 }
 
