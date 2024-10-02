@@ -6,17 +6,12 @@ export const loginStyle = {
   width: "400px",
 };
 
-export const btnLoginStyle = {
-  marginTop: "20px",
-};
-
 export const rootContainer = {
   display: "flex",
-  // height: "100%"
 };
 
 export const rootNav = {
-  width: "200px", 
+  width: "200px",
   backgroundColor: "#2c3e50",
   padding: "20px",
 };
@@ -36,4 +31,15 @@ export const rootContent = {
   flexGrow: 1,
   padding: "20px",
   backgroundColor: "#ecf0f1",
+};
+
+export const totalField: React.CSSProperties = {
+  backgroundColor: "lightgrey",
+  // flexDirection: "column",
+  textAlign: "center",
+  // justifyContent: "center",
+  // alignItems: "center",
+  // margin: "10px",
+  padding: "10px",
+  borderRadius: '5px'
 };

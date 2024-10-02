@@ -52,7 +52,7 @@
       "available": 23,
       "sold": 10,
       "categoryId": 1,
-      "colorIds": [1, 4],
+      "colors": [1, 4],
       "price": 300000
     },
     {

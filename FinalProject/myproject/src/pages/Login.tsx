@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { validateLoginForm } from "../util/validation";
-import { Input } from "../components";
+import { Button, Input } from "../components";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { loginStyle } from "./styles";
-import Button from "../components/Button";
 import { AppDispatch } from "../store";
 import { login as handleLogin } from "../store/reducers/authReducer";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -34,7 +33,6 @@ const Login = () => {
 
         if (!errors.email && !errors.password) {
           dispatch(handleLogin({ email: emailValue, password: passwordValue }));
-          // navigate("/home");
         }
 
         if (Object.keys(errors).length === 0) {
@@ -78,7 +76,7 @@ const Login = () => {
           ref={(element) => (inputsRefs.current.password = element)}
           error={errMessage}
         />
-        <Button label={"Login"} />
+        <Button label={"Login"} variant="contained" color="success"/>
       </Box>
     </div>
   );

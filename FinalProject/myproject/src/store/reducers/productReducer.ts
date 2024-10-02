@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchJson } from "../api";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../../constants/constants";
 
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
@@ -21,7 +20,6 @@ interface Product {
   price: number;
 }
 
-
 interface ProductState {
   entities: Record<number, Product>;
   ids: number[];
@@ -36,8 +34,6 @@ const initialState: ProductState = {
   error: null,
 };
 
-
-
 const productSlice = createSlice({
   name: "products",
   initialState,
@@ -48,6 +44,7 @@ const productSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
+        console.log("state", state);
         state.status = "succeeded";
         const products: Product[] = action.payload;
         state.ids = products.map((product) => product.id);
@@ -57,7 +54,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message || "Failed to fetch products";
+        state.error = action?.error.message || "Failed to fetch products";
       })
   },
 });

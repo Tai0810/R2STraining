@@ -6,7 +6,7 @@ type Props = {
   label: string;
   placeholder?: string;
   type?: string;
-  // value?: string;
+  value?: string;
   error?: string;
 };
 
@@ -15,7 +15,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     {
       label,
       type = "text",
-      // value = "",
+      value = "",
       error = "",
       placeholder = "",
     },
@@ -25,7 +25,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <TextField
         label={label}
-        // defaultValue={currenValue}
+        defaultValue={value}
         placeholder={placeholder}
         error={!!error}
         helperText={error}

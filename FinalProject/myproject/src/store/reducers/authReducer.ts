@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { LOGOUT } from "../actions";
 import { fetchJson } from "../api";
-
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from "../../constants/constants";
 
 export const login = createAsyncThunk(
   "login",

@@ -10,3 +10,7 @@ export const drawerStyle = {
   backgroundColor: "aqua",
   marginRight: "20px",
 };
+
+export const btnLoginStyle = {
+  marginTop: "20px",
+};
