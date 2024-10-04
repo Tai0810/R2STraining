@@ -100,6 +100,18 @@
         1
       ],
       "price": 1450000
+    },
+    {
+      "id": "b36f",
+      "name": "Test",
+      "available": 2,
+      "sold": 2,
+      "category": 3,
+      "colors": [
+        "2",
+        "3"
+      ],
+      "price": 21312321
     }
   ]
 }

@@ -33,13 +33,25 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
       available: 0,
       sold: 0,
       category: 0,
-      colors: [],
+      colors: [] as number[],
       price: 0,
     });
 
+    // const { entities: categories = [] } = useSelector(
+    //   (state: any) => state.category
+    // );
+    // const { entities: colors = [] } = useSelector((state: any) => state.color);
+
     useEffect(() => {
       if (product) {
-        setFormData(product);
+        setFormData({
+          name: product.name || "",
+          available: product.available || 0,
+          sold: product.sold || 0,
+          category: product.category || 0,
+          colors: product.colors || [], 
+          price: product.price || 0,
+        });
       } else {
         setFormData({
           name: "",
@@ -54,10 +66,10 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
 
     const handleColorToggle = useCallback((colorId: number) => {
       setFormData((prev) => {
-        const colors = prev.colors.includes(colorId)
+        const updatedColors = prev.colors.includes(colorId)
           ? prev.colors.filter((id) => id !== colorId)
           : [...prev.colors, colorId];
-        return { ...prev, colors };
+        return { ...prev, colors: updatedColors };
       });
     }, []);
 
@@ -94,7 +106,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
         </Button>
       ));
     }, [colorArray, formData.colors]);
-    
+
     return (
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>{product ? "Edit Product" : "Add Product"}</DialogTitle>
@@ -135,7 +147,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
             <Select
               value={formData.category}
               onChange={(e) =>
-                setFormData({ ...formData, category: + e.target.value })
+                setFormData({ ...formData, category: +e.target.value })
               }
             >
               {renderedCategories}

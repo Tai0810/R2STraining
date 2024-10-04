@@ -17,6 +17,8 @@ import TableBody from "./../components/TableBody";
 import { totalField } from "./styles";
 import { Button, ConfirmDialog, ProductDialog } from "../components";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+import { fetchColors } from "../store/reducers/colorReducer";
+import { fetchCategory } from "../store/reducers/categoryReducer";
 
 const headers = [
   { text: "No" },
@@ -76,6 +78,8 @@ export default function Products() {
     if (status === "idle") {
       dispatch(fetchProducts());
     }
+    dispatch(fetchColors());
+    dispatch(fetchCategory());
   }, [status, dispatch]);
 
   const handleEdit = (productId: number) => {
@@ -85,24 +89,26 @@ export default function Products() {
   };
 
   const handleSave = (updatedProduct: any) => {
+    console.log("Saving product:", updatedProduct); // Kiểm tra dữ liệu
     if (dialogMode === "add") {
-      dispatch(addProduct(updatedProduct)); 
+      dispatch(addProduct(updatedProduct));
     } else {
-      dispatch(updateProduct(updatedProduct)); 
+      dispatch(updateProduct(updatedProduct));
     }
     setOpenDialog(false);
   };
+  
 
   const handleAdd = () => {
-    setSelectedProduct({
-      id: productIds.length + 1,
-      name: "",
-      available: 0,
-      sold: 0,
-      category: 1,
-      colors: [],
-      price: 0,
-    });
+    // setSelectedProduct({
+    //   id: productIds.length + 1,
+    //   name: "",
+    //   available: 0,
+    //   sold: 0,
+    //   category: 0,
+    //   colors: [],
+    //   price: 0,
+    // });
     setDialogMode("add");
     setOpenDialog(true);
   };
@@ -193,7 +199,7 @@ export default function Products() {
       <ProductDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
-        onSubmit={dialogMode === "add" ? handleAdd : handleSave}
+        onSubmit={handleSave}
         product={selectedProduct}
         categories={categories || []} // Thêm giá trị mặc định []
         colors={colors || []} // Tương tự cho colors
