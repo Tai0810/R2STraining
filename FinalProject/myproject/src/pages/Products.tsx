@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useMemo, useState } from "react";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -6,12 +6,28 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../store/reducers/productReducer";
+import {
+  addProduct,
+  deleteProduct,
+  fetchProducts,
+  updateProduct,
+} from "../store/reducers/productReducer";
 import { AppDispatch } from "../store";
 import TableBody from "./../components/TableBody";
 import { totalField } from "./styles";
-import { AddProductDialog, Button, EditProductDialog } from "../components";
+import { Button, ConfirmDialog, ProductDialog } from "../components";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+
+const headers = [
+  { text: "No" },
+  { text: "Name" },
+  { text: "Available" },
+  { text: "Sold" },
+  { text: "Category" },
+  { text: "Colors" },
+  { text: "Price" },
+  { text: "Action" },
+];
 
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,14 +39,40 @@ export default function Products() {
   } = useSelector((state: any) => state.product || {});
 
   const { entities: colors = {} } = useSelector((state: any) => state.color);
-  const { entities: categories = {} } = useSelector((state: any) => state.category);
+  const { entities: categories = {} } = useSelector(
+    (state: any) => state.category
+  );
 
-  const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
-  const [openEditDialog, setOpenEditDialog] = React.useState(false);
-  const [openAddDialog, setOpenAddDialog] = React.useState(false);
-  const [newProduct, setNewProduct] = React.useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
+  const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
+    null
+  );
 
-  React.useEffect(() => {
+  const handleUpdate = (product: any) => {
+    dispatch(updateProduct(product));
+  };
+
+  const handleDelete = (productId: any) => {
+    setProductIdToDelete(productId);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (productIdToDelete) {
+      dispatch(deleteProduct(productIdToDelete));
+      setProductIdToDelete(null);
+      setOpenConfirmDialog(false);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenConfirmDialog(false);
+  };
+
+  useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
     }
@@ -38,46 +80,48 @@ export default function Products() {
 
   const handleEdit = (productId: number) => {
     setSelectedProduct(products[productId]);
-    setOpenEditDialog(true);
+    setDialogMode("edit");
+    setOpenDialog(true);
   };
 
   const handleSave = (updatedProduct: any) => {
-    setOpenEditDialog(false);
+    if (dialogMode === "add") {
+      dispatch(addProduct(updatedProduct)); 
+    } else {
+      dispatch(updateProduct(updatedProduct)); 
+    }
+    setOpenDialog(false);
   };
 
   const handleAdd = () => {
-    setNewProduct({
+    setSelectedProduct({
       id: productIds.length + 1,
       name: "",
       available: 0,
       sold: 0,
-      categoryId: 1,
+      category: 1,
       colors: [],
       price: 0,
     });
-    setOpenAddDialog(true);
+    setDialogMode("add");
+    setOpenDialog(true);
   };
 
-  const handleAddSave = (addedProduct: any) => {
-    setOpenAddDialog(false);
-    console.log("Sản phẩm mới:", addedProduct);
-  };
-
-  const totalAvailable = React.useMemo(() => {
+  const totalAvailable = useMemo(() => {
     return productIds.reduce(
       (acc: any, id: any) => acc + (products[id]?.available || 0),
       0
     );
   }, [productIds, products]);
 
-  const totalSold = React.useMemo(() => {
+  const totalSold = useMemo(() => {
     return productIds.reduce(
       (acc: any, id: any) => acc + (products[id]?.sold || 0),
       0
     );
   }, [productIds, products]);
 
-  const revenue = React.useMemo(() => {
+  const revenue = useMemo(() => {
     return productIds.reduce(
       (acc: any, id: any) =>
         acc + (products[id]?.price * products[id]?.sold || 0),
@@ -85,18 +129,7 @@ export default function Products() {
     );
   }, [productIds, products]);
 
-  const totalProducts = React.useMemo(() => productIds.length, [productIds]);
-
-  const headers = [
-    { text: "No" },
-    { text: "Name" },
-    { text: "Available" },
-    { text: "Sold" },
-    { text: "Category" },
-    { text: "Colors" },
-    { text: "Price" },
-    { text: "Action" },
-  ];
+  const totalProducts = useMemo(() => productIds.length, [productIds]);
 
   return (
     <div style={{ width: "100vw", paddingRight: "20px" }}>
@@ -145,27 +178,26 @@ export default function Products() {
             categories={categories}
             colors={colors}
             onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         </Table>
       </TableContainer>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDelete}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this product?"
+      />
 
-      {selectedProduct && (
-        <EditProductDialog
-          open={openEditDialog}
-          onClose={() => setOpenEditDialog(false)}
-          product={selectedProduct}
-          onSave={handleSave}
-        />
-      )}
-
-      {newProduct && (
-        <AddProductDialog
-          open={openAddDialog}
-          onClose={() => setOpenAddDialog(false)}
-          product={newProduct}
-          onSave={handleAddSave}
-        />
-      )}
+      <ProductDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onSubmit={dialogMode === "add" ? handleAdd : handleSave}
+        product={selectedProduct}
+        categories={categories || []} // Thêm giá trị mặc định []
+        colors={colors || []} // Tương tự cho colors
+      />
     </div>
   );
 }

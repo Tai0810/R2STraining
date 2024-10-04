@@ -50,7 +50,10 @@
       "available": 23,
       "sold": 10,
       "categoryId": 1,
-      "colorIds": [1, 4],
+      "colorIds": [
+        1,
+        4
+      ],
       "price": 500000
     },
     {
@@ -59,7 +62,10 @@
       "available": 4,
       "sold": 2,
       "categoryId": 1,
-      "colorIds": [1, 4],
+      "colorIds": [
+        2,
+        3
+      ],
       "price": 450000
     },
     {
@@ -68,7 +74,9 @@
       "available": 100,
       "sold": 7,
       "categoryId": 2,
-      "colorIds": [4, 6],
+      "colorIds": [
+        5
+      ],
       "price": 370000
     },
     {
@@ -77,17 +85,21 @@
       "available": 30,
       "sold": 1,
       "categoryId": 3,
-      "colorIds": [8],
+      "colorIds": [
+        3
+      ],
       "price": 1450000
     },
     {
       "id": "5",
-      "name": "Hand Bag with metal strap",
-      "available": 5,
+      "name": "Silver necklace",
+      "available": 20,
       "sold": 1,
-      "categoryId": 2,
-      "colorIds": [3, 2],
-      "price": 260000
+      "categoryId": 3,
+      "colorIds": [
+        1
+      ],
+      "price": 1450000
     }
   ]
 }

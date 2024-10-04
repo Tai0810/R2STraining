@@ -2,6 +2,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchColors } from "../store/reducers/colorReducer";
 import { AppDispatch } from "../store";
+import { Button } from "@mui/material";
+import { Input } from "../components";
+// import { Button } from "../components";
 
 const Color = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,21 +25,25 @@ const Color = () => {
   return (
     <div style={{ width: "100vw" }}>
       <h1>Color List</h1>
-      {colorIds.map((id: string, index: number) => (
-        <div
-          style={{
-            backgroundColor: "yellow",
-            // display: "flex",
-            // flexDirection: "row",
-          }}
-          key={id}
-        >
-          
-          <div>{colors[id].name} X</div>
-
-          
-        </div>
-      ))}
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
+        {colorIds.map((id: string) => (
+          <div
+            style={{
+              marginRight: "10px",
+              backgroundColor: "lightgray",
+              padding: "10px",
+              borderRadius: '20px',
+            }}
+          >
+            {colors[id].name}
+          </div>
+        ))}
+          <Input/>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,173 @@
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+
+interface Product {
+  id?: number;
+  name: string;
+  available: number;
+  sold: number;
+  category: number;
+  colors: number[];
+  price: number;
+}
+
+interface ProductDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (product: Product) => void;
+  product?: Product | null;
+  categories: { id: number; name: string }[];
+  colors: { id: number; name: string }[];
+}
+
+const ProductDialog: React.FC<ProductDialogProps> = React.memo(
+  ({ open, onClose, onSubmit, product, categories, colors }) => {
+    const [formData, setFormData] = useState<Product>({
+      name: "",
+      available: 0,
+      sold: 0,
+      category: 0,
+      colors: [],
+      price: 0,
+    });
+
+    useEffect(() => {
+      if (product) {
+        setFormData(product);
+      } else {
+        setFormData({
+          name: "",
+          available: 0,
+          sold: 0,
+          category: 0,
+          colors: [],
+          price: 0,
+        });
+      }
+    }, [product]);
+
+    const handleColorToggle = useCallback((colorId: number) => {
+      setFormData((prev) => {
+        const colors = prev.colors.includes(colorId)
+          ? prev.colors.filter((id) => id !== colorId)
+          : [...prev.colors, colorId];
+        return { ...prev, colors };
+      });
+    }, []);
+
+    const handleSubmit = useCallback(() => {
+      console.log("Submitting product:", formData);
+      onSubmit(formData);
+      onClose();
+    }, [formData, onSubmit, onClose]);
+
+    const categoryArray = Object.values(categories);
+    const renderedCategories = useMemo(() => {
+      return categoryArray.map((category) => (
+        <MenuItem key={category.id} value={category.id}>
+          {category.name}
+        </MenuItem>
+      ));
+    }, [categoryArray]);
+
+    // console.log("Color data:", colors);
+    const colorArray = Object.values(colors);
+    const renderedColors = useMemo(() => {
+      return colorArray.map((color) => (
+        <Button
+          key={color.id}
+          variant={
+            Array.isArray(formData.colors) && formData.colors.includes(color.id)
+              ? "contained"
+              : "outlined"
+          }
+          onClick={() => handleColorToggle(color.id)}
+          style={{ margin: "4px" }}
+        >
+          {color.name}
+        </Button>
+      ));
+    }, [colorArray, formData.colors]);
+    
+    return (
+      <Dialog open={open} onClose={onClose}>
+        <DialogTitle>{product ? "Edit Product" : "Add Product"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="Name"
+            type="text"
+            fullWidth
+            name="name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Available"
+            type="number"
+            fullWidth
+            name="available"
+            value={formData.available}
+            onChange={(e) =>
+              setFormData({ ...formData, available: +e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Sold"
+            type="number"
+            fullWidth
+            name="sold"
+            value={formData.sold}
+            onChange={(e) =>
+              setFormData({ ...formData, sold: +e.target.value })
+            }
+          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({ ...formData, category: + e.target.value })
+              }
+            >
+              {renderedCategories}
+            </Select>
+          </FormControl>
+          <div style={{ margin: "16px 0" }}>
+            <span>Colors:</span>
+            <div>{renderedColors}</div>
+          </div>
+          <TextField
+            margin="dense"
+            label="Price"
+            type="number"
+            fullWidth
+            name="price"
+            value={formData.price}
+            onChange={(e) =>
+              setFormData({ ...formData, price: +e.target.value })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            {product ? "Update" : "Add"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+);
+
+export default ProductDialog;

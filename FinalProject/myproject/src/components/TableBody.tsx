@@ -1,9 +1,5 @@
-import React from "react";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Button from "./Button";
+import React, { useCallback } from "react";
+import TableRowComponent from "./TableRowComponent"; // Import component mới
 
 const TableBody: React.FC<any> = ({
   products,
@@ -11,52 +7,49 @@ const TableBody: React.FC<any> = ({
   categories,
   colors,
   onEdit,
+  onDelete,
 }) => {
-  const getCategoryNameById = (id: string) => {
-    const category = categories[id];
-    return category ? category.name : "Unknown";
-  };
-  
+  const getCategoryNameById = useCallback(
+    (id: string) => {
+      const category = categories[id];
+      return category ? category.name : "Unknown";
+    },
+    [categories]
+  );
 
-  const getColorNamesById = (colorIds: number[] = []) => {
-    if (colorIds.length === 0) {
-      return "No colors available";
-    } else if (colorIds.length === 1) {
-      const colorName = colors[colorIds[0]]?.name;
-      console.log("colorName", colorIds[0]);
-      return colorName ? colorName : "Unknown color";
-    } else {
-      return colorIds
-        .map((colorId) => colors[colorId]?.name || "Unknown")
-        .join(", ");
-    }
-  };
+  const getColorNamesById = useCallback(
+    (colorIds: number[] = []) => {
+      if (colorIds.length === 0) {
+        return "No colors available";
+      } else if (colorIds.length === 1) {
+        const colorName = colors[colorIds[0]]?.name;
+        return colorName ? colorName : "Unknown color";
+      } else {
+        return colorIds
+          .map((colorId) => colors[colorId]?.name || "Unknown")
+          .join(", ");
+      }
+    },
+    [colors]
+  );
 
   return (
     <>
       {productIds.map((id: number, index: number) => {
         const product = products[id];
-        console.log("Product:", product);
+        const category = getCategoryNameById(product.categoryId);
+        const colorNames = getColorNamesById(product.colorIds || []);
+
         return (
-          <TableRow key={id}>
-            <TableCell>{index + 1}</TableCell>
-            <TableCell>{product.name}</TableCell>
-            <TableCell>{product.available}</TableCell>
-            <TableCell>{product.sold}</TableCell>
-            <TableCell>{getCategoryNameById(product.categoryId)}</TableCell>
-            <TableCell>{getColorNamesById(product.colorIds || [])}</TableCell>
-            <TableCell>{product.price.toLocaleString()}</TableCell>
-            <TableCell
-              style={{ display: "flex", justifyContent: "space-evenly" }}
-            >
-              <Button
-                label="Edit"
-                onClick={() => onEdit(id)}
-                startIcon={<EditIcon />}
-              />
-              <Button label="Delete" startIcon={<DeleteIcon />} color="error" />
-            </TableCell>
-          </TableRow>
+          <TableRowComponent
+            key={id}
+            product={product}
+            index={index}
+            category={category}
+            colors={colorNames}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
         );
       })}
     </>
