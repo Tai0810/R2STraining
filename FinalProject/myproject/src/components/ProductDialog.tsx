@@ -12,8 +12,8 @@ interface Product {
   name: string;
   available: number;
   sold: number;
-  category: number;
-  colors: number[];
+  categoryId: number;
+  colorIds: number[];
   price: number;
 }
 
@@ -32,8 +32,8 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
       name: "",
       available: 0,
       sold: 0,
-      category: 0,
-      colors: [] as number[],
+      categoryId: 0,
+      colorIds: [] as number[],
       price: 0,
     });
 
@@ -48,8 +48,8 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           name: product.name || "",
           available: product.available || 0,
           sold: product.sold || 0,
-          category: product.category || 0,
-          colors: product.colors || [], 
+          categoryId: product.categoryId || 0,
+          colorIds: product.colorIds || [], // đảm bảo colors là mảng
           price: product.price || 0,
         });
       } else {
@@ -57,8 +57,8 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           name: "",
           available: 0,
           sold: 0,
-          category: 0,
-          colors: [],
+          categoryId: 0,
+          colorIds: [],
           price: 0,
         });
       }
@@ -66,10 +66,10 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
 
     const handleColorToggle = useCallback((colorId: number) => {
       setFormData((prev) => {
-        const updatedColors = prev.colors.includes(colorId)
-          ? prev.colors.filter((id) => id !== colorId)
-          : [...prev.colors, colorId];
-        return { ...prev, colors: updatedColors };
+        const updatedColors = prev.colorIds.includes(colorId)
+          ? prev.colorIds.filter((id) => id !== colorId)
+          : [...prev.colorIds, colorId];
+        return { ...prev, colorIds: updatedColors };
       });
     }, []);
 
@@ -95,7 +95,8 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
         <Button
           key={color.id}
           variant={
-            Array.isArray(formData.colors) && formData.colors.includes(color.id)
+            Array.isArray(formData.colorIds) &&
+            formData.colorIds.includes(color.id)
               ? "contained"
               : "outlined"
           }
@@ -105,7 +106,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           {color.name}
         </Button>
       ));
-    }, [colorArray, formData.colors]);
+    }, [colorArray, formData.colorIds]);
 
     return (
       <Dialog open={open} onClose={onClose}>
@@ -145,9 +146,9 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           <FormControl fullWidth margin="dense">
             <InputLabel>Category</InputLabel>
             <Select
-              value={formData.category}
+              value={formData.categoryId}
               onChange={(e) =>
-                setFormData({ ...formData, category: +e.target.value })
+                setFormData({ ...formData, categoryId: +e.target.value })
               }
             >
               {renderedCategories}

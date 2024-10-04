@@ -102,16 +102,16 @@
       "price": 1450000
     },
     {
-      "id": "b36f",
-      "name": "Test",
-      "available": 2,
-      "sold": 2,
-      "category": 3,
-      "colors": [
+      "id": "83d5",
+      "name": "New",
+      "available": 3,
+      "sold": 23,
+      "categoryId": 2,
+      "colorIds": [
         "2",
         "3"
       ],
-      "price": 21312321
+      "price": 250000
     }
   ]
 }

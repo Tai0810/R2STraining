@@ -89,7 +89,7 @@ export default function Products() {
   };
 
   const handleSave = (updatedProduct: any) => {
-    console.log("Saving product:", updatedProduct); // Kiểm tra dữ liệu
+    console.log("Saving product:", updatedProduct);
     if (dialogMode === "add") {
       dispatch(addProduct(updatedProduct));
     } else {
