@@ -116,13 +116,15 @@
     {
       "id": "7",
       "name": "Nike 2",
-      "available": 5,
-      "sold": 10,
-      "categoryId": 2,
+      "available": 10,
+      "sold": 6,
+      "categoryId": 3,
       "colorIds": [
-        3
+        2,
+        3,
+        4
       ],
-      "price": 1500000
+      "price": 1600000
     }
   ]
 }

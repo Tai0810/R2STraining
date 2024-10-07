@@ -38,25 +38,15 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
     });
 
     useEffect(() => {
-      if (product) {
-        setFormData({
-          name: product.name || "",
-          available: product.available || 0,
-          sold: product.sold || 0,
-          categoryId: product.categoryId || 0,
-          colorIds: product.colorIds || [],
-          price: product.price || 0,
-        });
-      } else {
-        setFormData({
-          name: "",
-          available: 0,
-          sold: 0,
-          categoryId: 0,
-          colorIds: [],
-          price: 0,
-        });
-      }
+      setFormData({
+        id: product?.id || new Date().getTime(),
+        name: product?.name || "",
+        available: product?.available || 0,
+        sold: product?.sold || 0,
+        categoryId: product?.categoryId || 0,
+        colorIds: product?.colorIds || [],
+        price: product?.price || 0,
+      });
     }, [product]);
 
     const handleColorToggle = useCallback((colorId: number) => {
@@ -83,21 +73,21 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
       ));
     }, [categoryArray]);
 
-    // console.log("Color data:", colors);
     const colorArray = Object.values(colors);
     const renderedColors = useMemo(() => {
-      return colorArray.map((color) => (
-        <Button
-          key={color.id}
-          variant={
-            formData.colorIds.includes(color.id) ? "contained" : "outlined"
-          }
-          onClick={() => handleColorToggle(color.id)}
-          style={{ margin: "4px" }}
-        >
-          {color.name}
-        </Button>
-      ));
+      return colorArray.map((color) => {
+        const isSelected = formData.colorIds.includes(Number(color.id));
+        return (
+          <Button
+            key={color.id}
+            variant={isSelected ? "contained" : "outlined"}
+            onClick={() => handleColorToggle(Number(color.id))}
+            style={{ margin: "4px" }}
+          >
+            {color.name}
+          </Button>
+        );
+      });
     }, [colorArray, formData.colorIds, handleColorToggle]);
 
     return (

@@ -9,66 +9,75 @@ import {
   TableRow,
   Paper,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
 } from "@mui/material";
 import { AppDispatch } from "../store";
-import { Button, CategoryDialog } from "../components";
+import { Button, CategoryDialog, ConfirmDialog } from "../components";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { fetchProducts } from "../store/reducers/productReducer";
-import { addCategory, deleteCategory } from "../store/reducers/categoryReducer";
+import {
+  addCategory,
+  deleteCategory,
+  fetchCategories,
+  updateCategory,
+} from "../store/reducers/categoryReducer";
 
-const ITEMS_PER_PAGE = 5; // Số mục trên mỗi trang
+const ITEMS_PER_PAGE = 5;
+const headers = [{ text: "No" }, { text: "Name" }, { text: "" }];
 
 const Categories = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { entities: categories = {}, ids: categoryIds = [] } = useSelector(
-    (state: any) => state.category
-  );
+  const {
+    entities: categories = {},
+    ids: categoryIds = [],
+    status,
+  } = useSelector((state: any) => state.category);
 
-  const { entities: products = {} } = useSelector(
-    (state: any) => state.product
-  );
+  // const { entities: products = {} } = useSelector(
+  //   (state: any) => state.product
+  // );
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState<string>("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [productCount, setProductCount] = useState<number>(0);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
+  // const [productCount, setProductCount] = useState<number>(0);
   const [openCategoryDialog, setOpenCategoryDialog] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState(1); // Trạng thái cho trang hiện tại
-
-  const headers = [{ text: "No" }, { text: "Name" }, { text: "" }];
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (status === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [status, dispatch]);
 
-  const getProductCountByCategory = useCallback(
-    (categoryId: string) => {
-      return Object.values(products).filter(
-        (product: any) => product.category === categoryId
-      ).length;
+  // const getProductCountByCategory = useCallback(
+  //   (categoryId: string) => {
+  //     return Object.values(products).filter(
+  //       (product: any) => product.category === categoryId
+  //     ).length;
+  //   },
+  //   [products]
+  // );
+
+  const handleEdit = useCallback(
+    (id: string) => {
+      setEditId(id);
+      setEditName(categories[id].name);
     },
-    [products]
+    [categories]
   );
-
-  const handleEdit = useCallback((id: string) => {
-    setEditId(id);
-    setEditName(categories[id].name);
-  }, [categories]);
 
   const handleSave = useCallback(
     (id: string) => {
       console.log("Saving:", id, editName);
+      dispatch(updateCategory({ id, name: editName }));
       setEditId(null);
     },
-    [editName]
+    [editName, dispatch]
   );
 
   const handleCancel = useCallback(() => {
@@ -76,15 +85,12 @@ const Categories = () => {
     setEditName("");
   }, []);
 
-  const handleDeleteClick = useCallback(
-    (id: string) => {
-      setSelectedCategoryId(id);
-      const count = getProductCountByCategory(id);
-      setProductCount(count);
-      setOpenDialog(true);
-    },
-    [getProductCountByCategory]
-  );
+  const handleDeleteClick = useCallback((id: string) => {
+    setSelectedCategoryId(id);
+    // const count = getProductCountByCategory(id);
+    // setProductCount(count);
+    setOpenDialog(true);
+  }, []);
 
   const handleCloseDialog = useCallback(() => {
     setOpenDialog(false);
@@ -119,10 +125,8 @@ const Categories = () => {
     [categoryIds, dispatch]
   );
 
-  // Tính số trang tổng
   const totalPages = Math.ceil(categoryIds.length / ITEMS_PER_PAGE);
-  
-  // Chỉ hiển thị danh mục theo trang hiện tại
+
   const paginatedCategoryIds = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return categoryIds.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -216,7 +220,13 @@ const Categories = () => {
         </Table>
       </TableContainer>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "10px",
+        }}
+      >
         <Button
           label="Previous"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -224,28 +234,20 @@ const Categories = () => {
         />
         <Button
           label="Next"
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           disabled={currentPage === totalPages}
         />
       </div>
 
-      <Dialog
+      <ConfirmDialog
         open={openDialog}
         onClose={handleCloseDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {`This category is currently being used by ${productCount} products. Are you sure you want to delete it?`}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button label="Cancel" onClick={handleCloseDialog} />
-          <Button label="Confirm" onClick={handleConfirmDelete} color="error" />
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleConfirmDelete}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this category?"
+      />
 
       <CategoryDialog
         open={openCategoryDialog}

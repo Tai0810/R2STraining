@@ -6,7 +6,7 @@ import {
   deleteColor,
 } from "../store/reducers/colorReducer";
 import { AppDispatch } from "../store";
-import { Button } from "../components";
+import { Button, ConfirmDialog } from "../components";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
   TextField,
@@ -91,7 +91,7 @@ const Color = () => {
           <Button variant="contained" label="Add" onClick={handleAddColor} />
         </div>
       </div>
-      <Dialog
+      {/* <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
@@ -107,7 +107,14 @@ const Color = () => {
           <Button label="Cancel" onClick={handleCloseDialog} />
           <Button label="Confirm" onClick={handleConfirmDelete} color="error" />
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
+      <ConfirmDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDelete}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this color?"
+      />
     </div>
   );
 };
