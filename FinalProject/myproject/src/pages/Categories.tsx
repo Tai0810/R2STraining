@@ -11,11 +11,9 @@ import {
   TextField,
 } from "@mui/material";
 import { AppDispatch } from "../store";
-import { Button, CategoryDialog, ConfirmDialog } from "../components";
+import { Button, ConfirmDialog } from "../components";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import { fetchProducts } from "../store/reducers/productReducer";
 import {
   addCategory,
   deleteCategory,
@@ -34,34 +32,21 @@ const Categories = () => {
     status,
   } = useSelector((state: any) => state.category);
 
-  // const { entities: products = {} } = useSelector(
-  //   (state: any) => state.product
-  // );
-
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState<string>("");
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
-  // const [productCount, setProductCount] = useState<number>(0);
-  const [openCategoryDialog, setOpenCategoryDialog] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchCategories());
     }
   }, [status, dispatch]);
-
-  // const getProductCountByCategory = useCallback(
-  //   (categoryId: string) => {
-  //     return Object.values(products).filter(
-  //       (product: any) => product.category === categoryId
-  //     ).length;
-  //   },
-  //   [products]
-  // );
 
   const handleEdit = useCallback(
     (id: string) => {
@@ -73,22 +58,35 @@ const Categories = () => {
 
   const handleSave = useCallback(
     (id: string) => {
-      console.log("Saving:", id, editName);
-      dispatch(updateCategory({ id, name: editName }));
-      setEditId(null);
+      if (id === "new") {
+        // Add new category
+        const maxId =
+          categoryIds.length > 0 ? Math.max(...categoryIds.map(Number)) : 0;
+        const newCategory = {
+          id: (maxId + 1).toString(),
+          name: newCategoryName,
+        };
+        dispatch(addCategory(newCategory));
+        setIsAdding(false);
+        setNewCategoryName("");
+      } else {
+        // Update existing category
+        dispatch(updateCategory({ id, name: editName }));
+        setEditId(null);
+      }
     },
-    [editName, dispatch]
+    [editName, newCategoryName, categoryIds, dispatch]
   );
 
   const handleCancel = useCallback(() => {
     setEditId(null);
     setEditName("");
+    setIsAdding(false);
+    setNewCategoryName("");
   }, []);
 
   const handleDeleteClick = useCallback((id: string) => {
     setSelectedCategoryId(id);
-    // const count = getProductCountByCategory(id);
-    // setProductCount(count);
     setOpenDialog(true);
   }, []);
 
@@ -99,31 +97,14 @@ const Categories = () => {
 
   const handleConfirmDelete = useCallback(() => {
     if (selectedCategoryId) {
-      console.log("Deleting category with ID:", selectedCategoryId);
       dispatch(deleteCategory(selectedCategoryId));
     }
     handleCloseDialog();
   }, [selectedCategoryId, dispatch, handleCloseDialog]);
 
   const handleAddCategory = () => {
-    setOpenCategoryDialog(true);
+    setIsAdding(true);
   };
-
-  const handleSubmitCategory = useCallback(
-    (newCategory: any) => {
-      console.log("Adding new category:", newCategory);
-      const categoryToAdd = {
-        ...newCategory,
-        id: newCategory.id?.toString(),
-      };
-      const maxId =
-        categoryIds.length > 0 ? Math.max(...categoryIds.map(Number)) : 0;
-      categoryToAdd.id = (maxId + 1).toString();
-      dispatch(addCategory(categoryToAdd));
-      setOpenCategoryDialog(false);
-    },
-    [categoryIds, dispatch]
-  );
 
   const totalPages = Math.ceil(categoryIds.length / ITEMS_PER_PAGE);
 
@@ -200,8 +181,8 @@ const Categories = () => {
         <Button
           label="Add"
           color="success"
-          startIcon={<AddToPhotosIcon />}
           onClick={handleAddCategory}
+          disabled={isAdding}
         />
       </div>
 
@@ -216,7 +197,27 @@ const Categories = () => {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>{categoryList}</TableBody>
+          <TableBody>
+            {categoryList}
+            {isAdding && (
+              <TableRow>
+                <TableCell>{categoryIds.length + 1}</TableCell>
+                <TableCell>
+                  <TextField
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                    placeholder="Enter new category name"
+                  />
+                </TableCell>
+                <TableCell>
+                  <Button label="Save" onClick={() => handleSave("new")} />
+                  <Button label="Cancel" onClick={handleCancel} />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
 
@@ -247,12 +248,6 @@ const Categories = () => {
         onConfirm={handleConfirmDelete}
         title="Confirm Deletion"
         message="Are you sure you want to delete this category?"
-      />
-
-      <CategoryDialog
-        open={openCategoryDialog}
-        onClose={() => setOpenCategoryDialog(false)}
-        onSubmit={handleSubmitCategory}
       />
     </div>
   );
