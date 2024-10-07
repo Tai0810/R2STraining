@@ -8,6 +8,7 @@ type Props = {
   startIcon?: React.ReactNode;
   variant?: "text" | "outlined" | "contained";
   color?: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning";
+  disabled?: boolean;
 };
 
 const Button = ({
@@ -17,6 +18,7 @@ const Button = ({
   startIcon,
   variant = "outlined",
   color = "primary",
+  disabled = false,
 }: Props) => (
   <ButtonMU
     variant={variant}
@@ -26,6 +28,7 @@ const Button = ({
     style={btnLoginStyle}
     onClick={onClick}
     startIcon={startIcon}
+    disabled={disabled}
   >
     {label}
   </ButtonMU>

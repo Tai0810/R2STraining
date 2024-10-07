@@ -33,8 +33,10 @@ const headers = [
   { text: "Category" },
   { text: "Colors" },
   { text: "Price" },
-  { text: "Action" },
+  { text: "" },
 ];
+
+const ITEMS_PER_PAGE = 5;
 
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
@@ -57,6 +59,9 @@ export default function Products() {
   const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
     null
   );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(productIds.length / ITEMS_PER_PAGE);
 
   const handleDelete = useCallback((productId: any) => {
     setProductIdToDelete(productId);
@@ -86,6 +91,7 @@ export default function Products() {
   const handleEdit = useCallback(
     (productId: any) => {
       setSelectedProduct(products[productId]);
+      console.log("Editing product:", products[productId]);
       setDialogMode("edit");
       setOpenDialog(true);
     },
@@ -96,23 +102,23 @@ export default function Products() {
     (updatedProduct: any) => {
       const productToSave = {
         ...updatedProduct,
-        id: updatedProduct.id?.toString(),
         colorIds: updatedProduct.colorIds.map((colorId: any) =>
           Number(colorId)
         ),
       };
 
-      if (!updatedProduct.id) {
+      if (dialogMode === "add") {
         const maxId =
           productIds.length > 0 ? Math.max(...productIds.map(Number)) : 0;
         productToSave.id = (maxId + 1).toString();
-      }
-
-      if (dialogMode === "add") {
         dispatch(addProduct(productToSave));
-      } else {
+      } else if (updatedProduct.id) {
+        productToSave.id = updatedProduct.id.toString();
+        console.log("testUpdate", productToSave.id);
+        
         dispatch(updateProduct(productToSave));
       }
+
       setOpenDialog(false);
     },
     [dispatch, dialogMode, productIds]
@@ -147,6 +153,12 @@ export default function Products() {
 
   const totalProducts = useMemo(() => productIds.length, [productIds]);
 
+  const currentProducts = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return productIds.slice(startIndex, endIndex);
+  }, [currentPage, productIds]);
+
   return (
     <div style={productComponent}>
       <h1>Seller</h1>
@@ -178,7 +190,7 @@ export default function Products() {
           </TableHead>
           <TableBody
             products={products}
-            productIds={productIds}
+            productIds={currentProducts}
             categories={categories}
             colors={colors}
             onEdit={handleEdit}
@@ -186,6 +198,27 @@ export default function Products() {
           />
         </Table>
       </TableContainer>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: "10px",
+        }}
+      >
+        <Button
+          label="Previous"
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        />
+        <Button
+          label="Next"
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        />
+      </div>
+
       <ConfirmDialog
         open={openConfirmDialog}
         onClose={handleCloseDialog}

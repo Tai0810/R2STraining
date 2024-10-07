@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchColors,
@@ -36,7 +36,7 @@ const Color = () => {
     }
   }, [status, dispatch]);
 
-  const handleAddColor = () => {
+  const handleAddColor = useCallback(() => {
     if (newColor.trim()) {
       const newColorId =
         colorIds.length > 0
@@ -45,39 +45,41 @@ const Color = () => {
       dispatch(addColor({ id: newColorId, name: newColor }));
       setNewColor("");
     }
-  };
+  }, [colorIds, dispatch, newColor]);
 
-  const handleDeleteClick = (colorId: string) => {
+  const handleDeleteClick = useCallback((colorId: string) => {
     setSelectedColorId(colorId);
     setOpenDialog(true);
-  };
+  }, []);
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = useCallback(() => {
     setOpenDialog(false);
     setSelectedColorId(null);
-  };
+  }, []);
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = useCallback(() => {
     if (selectedColorId !== null) {
-      dispatch(deleteColor(selectedColorId.toString()));
+      dispatch(deleteColor(selectedColorId));
     }
     handleCloseDialog();
-  };
+  }, [selectedColorId, dispatch, handleCloseDialog]);
+
+  const colorList = useMemo(() => {
+    return colorIds.map((id: string) => (
+      <div key={id} style={colorItem}>
+        {colors[id].name}
+        <div style={deleteColorItem} onClick={() => handleDeleteClick(id)}>
+          <ClearIcon fontSize="small" color="inherit" />
+        </div>
+      </div>
+    ));
+  }, [colorIds, colors, handleDeleteClick]);
 
   return (
     <div style={{ width: "100vw" }}>
       <h1>Color List</h1>
       <div style={{ display: "flex" }}>
-        <div style={colorBody}>
-          {colorIds.map((id: string) => (
-            <div key={id} style={colorItem}>
-              {colors[id].name}
-              <div style={deleteColorItem} onClick={() => handleDeleteClick(id)}>
-                <ClearIcon fontSize="small" color="inherit" />
-              </div>
-            </div>
-          ))}
-        </div>
+        <div style={colorBody}>{colorList}</div>
 
         <div style={{ width: "30%" }}>
           <TextField
