@@ -13,7 +13,12 @@ export const fetchProducts = createAsyncThunk(
 export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (newProduct: Product) => {
-    const response = await updateJson(BASE_URL + "/products", newProduct, "POST");
+    const newId = (newProduct.id || Date.now()).toString();
+    const response = await updateJson(
+      BASE_URL + "/products",
+      { ...newProduct, id: newId },
+      "POST"
+    );
     return response;
   }
 );
@@ -39,18 +44,18 @@ export const deleteProduct = createAsyncThunk(
 );
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   available: number;
   sold: number;
-  category: number;
-  colors: number[];
+  categoryId: number;
+  colorIds: number[];
   price: number;
 }
 
 interface ProductState {
-  entities: Record<number, Product>;
-  ids: number[];
+  entities: Record<string, Product>; 
+  ids: string[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -72,12 +77,11 @@ const productSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        console.log("state", state);
         state.status = "succeeded";
         const products: Product[] = action.payload;
-        state.ids = products.map((product) => product.id);
+        state.ids = products.map((product) => product.id.toString());
         products.forEach((product) => {
-          state.entities[product.id] = product;
+          state.entities[product.id.toString()] = product;
         });
       })
       .addCase(fetchProducts.rejected, (state, action) => {
@@ -86,17 +90,18 @@ const productSlice = createSlice({
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         const addedProduct: Product = action.payload;
-        state.entities[addedProduct.id] = addedProduct;
-        state.ids.push(addedProduct.id);
+        const newId = addedProduct.id.toString();
+        state.entities[newId] = addedProduct;
+        state.ids.push(newId);
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         const updatedProduct: Product = action.payload;
-        state.entities[updatedProduct.id] = updatedProduct;
+        state.entities[updatedProduct.id.toString()] = updatedProduct;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
-        const productId = action.payload;
+        const productId = action.payload.toString();
         delete state.entities[productId];
-        state.ids = state.ids.filter((id) => id !== productId); 
+        state.ids = state.ids.filter((id) => id !== productId);
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.status = "failed";

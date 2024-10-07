@@ -37,11 +37,6 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
       price: 0,
     });
 
-    // const { entities: categories = [] } = useSelector(
-    //   (state: any) => state.category
-    // );
-    // const { entities: colors = [] } = useSelector((state: any) => state.color);
-
     useEffect(() => {
       if (product) {
         setFormData({
@@ -49,7 +44,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           available: product.available || 0,
           sold: product.sold || 0,
           categoryId: product.categoryId || 0,
-          colorIds: product.colorIds || [], // đảm bảo colors là mảng
+          colorIds: product.colorIds || [],
           price: product.price || 0,
         });
       } else {
@@ -95,10 +90,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
         <Button
           key={color.id}
           variant={
-            Array.isArray(formData.colorIds) &&
-            formData.colorIds.includes(color.id)
-              ? "contained"
-              : "outlined"
+            formData.colorIds.includes(color.id) ? "contained" : "outlined"
           }
           onClick={() => handleColorToggle(color.id)}
           style={{ margin: "4px" }}
@@ -106,7 +98,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           {color.name}
         </Button>
       ));
-    }, [colorArray, formData.colorIds]);
+    }, [colorArray, formData.colorIds, handleColorToggle]);
 
     return (
       <Dialog open={open} onClose={onClose}>

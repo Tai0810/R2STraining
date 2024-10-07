@@ -18,7 +18,7 @@ import { totalField } from "./styles";
 import { Button, ConfirmDialog, ProductDialog } from "../components";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { fetchColors } from "../store/reducers/colorReducer";
-import { fetchCategory } from "../store/reducers/categoryReducer";
+import { fetchCategories } from "../store/reducers/categoryReducer";
 
 const headers = [
   { text: "No" },
@@ -79,7 +79,7 @@ export default function Products() {
       dispatch(fetchProducts());
     }
     dispatch(fetchColors());
-    dispatch(fetchCategory());
+    dispatch(fetchCategories());
   }, [status, dispatch]);
 
   const handleEdit = (productId: number) => {
@@ -88,20 +88,46 @@ export default function Products() {
     setOpenDialog(true);
   };
 
+  // const handleSave = (updatedProduct: any) => {
+  //   console.log("Saving product:", updatedProduct);
+  //   if (dialogMode === "add") {
+  //     dispatch(addProduct(updatedProduct));
+  //   } else {
+  //     dispatch(updateProduct(updatedProduct));
+  //   }
+  //   setOpenDialog(false);
+  // };
+
   const handleSave = (updatedProduct: any) => {
     console.log("Saving product:", updatedProduct);
+  
+    // Không chuyển đổi ID thành số nữa, chỉ đảm bảo id là chuỗi
+    const productToSave = {
+      ...updatedProduct,
+      id: updatedProduct.id?.toString(), // Đảm bảo ID là chuỗi
+      colorIds: updatedProduct.colorIds.map((colorId: any) => Number(colorId)), // Chuyển colorIds thành mảng số
+    };
+  
+    if (!updatedProduct.id) {
+      const maxId = productIds.length > 0 ? Math.max(...productIds.map(Number)) : 0;
+      productToSave.id = (maxId + 1).toString(); // Tạo ID mới là chuỗi số
+    }
+  
     if (dialogMode === "add") {
-      dispatch(addProduct(updatedProduct));
+      dispatch(addProduct(productToSave)); // Thêm sản phẩm với ID là chuỗi
     } else {
-      dispatch(updateProduct(updatedProduct));
+      dispatch(updateProduct(productToSave)); // Cập nhật sản phẩm với ID là chuỗi
     }
     setOpenDialog(false);
   };
   
 
   const handleAdd = () => {
+    // Tìm ID lớn nhất hiện tại trong danh sách sản phẩm để tạo ID mới tăng dần
+    // const maxId = productIds.length > 0 ? Math.max(...productIds) : 0;
+
     // setSelectedProduct({
-    //   id: productIds.length + 1,
+    //   id: maxId + 1, // Tạo ID mới bằng cách cộng 1 với ID lớn nhất hiện tại
     //   name: "",
     //   available: 0,
     //   sold: 0,

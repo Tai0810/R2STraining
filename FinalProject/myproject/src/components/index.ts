@@ -4,3 +4,4 @@ export { default as Drawer } from "./Drawer";
 export { default as TableBody } from "./TableBody";
 export { default as ConfirmDialog } from "./ConfirmDialog";
 export { default as ProductDialog } from "./ProductDialog";
+export { default as CategoryDialog } from "./CategoryDialog";

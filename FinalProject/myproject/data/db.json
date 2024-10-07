@@ -15,6 +15,10 @@
     {
       "id": "3",
       "name": "Accessory"
+    },
+    {
+      "id": "b2fc",
+      "name": "new"
     }
   ],
   "colors": [
@@ -100,18 +104,6 @@
         1
       ],
       "price": 1450000
-    },
-    {
-      "id": "83d5",
-      "name": "New",
-      "available": 3,
-      "sold": 23,
-      "categoryId": 2,
-      "colorIds": [
-        "2",
-        "3"
-      ],
-      "price": 250000
     }
   ]
 }
