@@ -39,13 +39,13 @@ export const deleteCategory = createAsyncThunk(
 );
 
 interface Category {
-  id: string; // Update id to be a string
+  id: string; 
   name: string;
 }
 
 interface CategoryState {
-  entities: Record<string, Category>; // Use string for the keys of entities
-  ids: string[]; // Use string[] for ids
+  entities: Record<string, Category>; 
+  ids: string[]; 
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -63,7 +63,6 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      // Fetch categories
       .addCase(fetchCategories.pending, (state) => {
         state.status = "loading";
       })
@@ -79,14 +78,12 @@ const categorySlice = createSlice({
         state.status = "failed";
         state.error = action?.error.message || "Failed to fetch categories";
       })
-
       // Add category
       .addCase(addCategory.fulfilled, (state, action) => {
         const addedCategory: Category = action.payload;
         state.entities[addedCategory.id] = addedCategory;
         state.ids.push(addedCategory.id);
       })
-
       // Update category
       .addCase(updateCategory.fulfilled, (state, action) => {
         const updatedCategory: Category = action.payload;
@@ -96,7 +93,6 @@ const categorySlice = createSlice({
         state.status = "failed";
         state.error = action?.error.message || "Failed to update category";
       })
-
       // Delete category
       .addCase(deleteCategory.fulfilled, (state, action) => {
         const categoryId = action.payload;

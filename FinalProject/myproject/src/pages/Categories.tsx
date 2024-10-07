@@ -25,23 +25,22 @@ import { addCategory, deleteCategory } from "../store/reducers/categoryReducer";
 
 const Categories = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    entities: categories = {},
-    ids: categoryIds = [],
-  } = useSelector((state: any) => state.category);
+  const { entities: categories = {}, ids: categoryIds = [] } = useSelector(
+    (state: any) => state.category
+  );
 
-  // Lấy danh sách sản phẩm từ store
-  const { entities: products = {} } = useSelector((state: any) => state.product);
+  const { entities: products = {} } = useSelector(
+    (state: any) => state.product
+  );
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState<string>("");
 
-  // State để quản lý dialog xóa
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [productCount, setProductCount] = useState<number>(0); // State để lưu số lượng sản phẩm liên quan
-
-  // State để quản lý dialog thêm danh mục
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
+  const [productCount, setProductCount] = useState<number>(0);
   const [openCategoryDialog, setOpenCategoryDialog] = useState<boolean>(false);
 
   const headers = [{ text: "No" }, { text: "Name" }, { text: "" }];
@@ -53,7 +52,6 @@ const Categories = () => {
 
   const handleSave = (id: string) => {
     console.log("Saving:", id, editName);
-    // Thêm logic lưu lại danh mục ở đây, ví dụ gọi dispatch
     setEditId(null);
   };
 
@@ -66,47 +64,46 @@ const Categories = () => {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  // Hàm để lấy số lượng sản phẩm sử dụng category
   const getProductCountByCategory = (categoryId: string) => {
     return Object.values(products).filter(
-      (product: any) => product.category === categoryId // Sửa logic để so sánh category dưới dạng chuỗi
+      (product: any) => product.category === categoryId
     ).length;
   };
 
-  // Mở dialog xóa
   const handleDeleteClick = (id: string) => {
     setSelectedCategoryId(id);
-    const count = getProductCountByCategory(id); // Lấy số lượng sản phẩm sử dụng category này
-    setProductCount(count); // Cập nhật state với số lượng sản phẩm
+    const count = getProductCountByCategory(id);
+    setProductCount(count);
     setOpenDialog(true);
   };
 
-  // Đóng dialog xóa
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedCategoryId(null);
   };
 
-  // Xác nhận xóa
   const handleConfirmDelete = () => {
     if (selectedCategoryId) {
-      // Thực hiện xóa (gọi dispatch xóa category)
       console.log("Deleting category with ID:", selectedCategoryId);
-      dispatch(deleteCategory(selectedCategoryId)); // ID được gửi dưới dạng chuỗi
+      dispatch(deleteCategory(selectedCategoryId));
     }
     handleCloseDialog();
   };
 
-  // Hàm mở dialog thêm danh mục
   const handleAddCategory = () => {
     setOpenCategoryDialog(true);
   };
 
-  // Hàm xử lý thêm danh mục mới
   const handleSubmitCategory = (newCategory: any) => {
     console.log("Adding new category:", newCategory);
-    // Dispatch thêm danh mục vào store
-    dispatch(addCategory(newCategory)); // Gọi dispatch thêm danh mục mới
+    const categoryToAdd = {
+      ...newCategory,
+      id: newCategory.id?.toString(),
+    };
+    const maxId =
+      categoryIds.length > 0 ? Math.max(...categoryIds.map(Number)) : 0;
+      categoryToAdd.id = (maxId + 1).toString();
+    dispatch(addCategory(categoryToAdd));
     setOpenCategoryDialog(false);
   };
 
@@ -124,7 +121,7 @@ const Categories = () => {
           label="Add"
           color="success"
           startIcon={<AddToPhotosIcon />}
-          onClick={handleAddCategory} // Gọi hàm mở dialog
+          onClick={handleAddCategory}
         />
       </div>
 

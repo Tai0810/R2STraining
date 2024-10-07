@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -14,7 +14,12 @@ import {
 } from "../store/reducers/productReducer";
 import { AppDispatch } from "../store";
 import TableBody from "./../components/TableBody";
-import { totalField } from "./styles";
+import {
+  productComponent,
+  totalAddComponent,
+  totalComponent,
+  totalField,
+} from "./styles";
 import { Button, ConfirmDialog, ProductDialog } from "../components";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { fetchColors } from "../store/reducers/colorReducer";
@@ -53,26 +58,22 @@ export default function Products() {
     null
   );
 
-  const handleUpdate = (product: any) => {
-    dispatch(updateProduct(product));
-  };
-
-  const handleDelete = (productId: any) => {
+  const handleDelete = useCallback((productId: any) => {
     setProductIdToDelete(productId);
     setOpenConfirmDialog(true);
-  };
+  }, []);
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = useCallback(() => {
     if (productIdToDelete) {
       dispatch(deleteProduct(productIdToDelete));
       setProductIdToDelete(null);
       setOpenConfirmDialog(false);
     }
-  };
+  }, [productIdToDelete, dispatch]);
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = useCallback(() => {
     setOpenConfirmDialog(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (status === "idle") {
@@ -82,62 +83,45 @@ export default function Products() {
     dispatch(fetchCategories());
   }, [status, dispatch]);
 
-  const handleEdit = (productId: number) => {
-    setSelectedProduct(products[productId]);
-    setDialogMode("edit");
-    setOpenDialog(true);
-  };
+  const handleEdit = useCallback(
+    (productId: any) => {
+      setSelectedProduct(products[productId]);
+      setDialogMode("edit");
+      setOpenDialog(true);
+    },
+    [products]
+  );
 
-  // const handleSave = (updatedProduct: any) => {
-  //   console.log("Saving product:", updatedProduct);
-  //   if (dialogMode === "add") {
-  //     dispatch(addProduct(updatedProduct));
-  //   } else {
-  //     dispatch(updateProduct(updatedProduct));
-  //   }
-  //   setOpenDialog(false);
-  // };
+  const handleSave = useCallback(
+    (updatedProduct: any) => {
+      const productToSave = {
+        ...updatedProduct,
+        id: updatedProduct.id?.toString(),
+        colorIds: updatedProduct.colorIds.map((colorId: any) =>
+          Number(colorId)
+        ),
+      };
 
-  const handleSave = (updatedProduct: any) => {
-    console.log("Saving product:", updatedProduct);
-  
-    // Không chuyển đổi ID thành số nữa, chỉ đảm bảo id là chuỗi
-    const productToSave = {
-      ...updatedProduct,
-      id: updatedProduct.id?.toString(), // Đảm bảo ID là chuỗi
-      colorIds: updatedProduct.colorIds.map((colorId: any) => Number(colorId)), // Chuyển colorIds thành mảng số
-    };
-  
-    if (!updatedProduct.id) {
-      const maxId = productIds.length > 0 ? Math.max(...productIds.map(Number)) : 0;
-      productToSave.id = (maxId + 1).toString(); // Tạo ID mới là chuỗi số
-    }
-  
-    if (dialogMode === "add") {
-      dispatch(addProduct(productToSave)); // Thêm sản phẩm với ID là chuỗi
-    } else {
-      dispatch(updateProduct(productToSave)); // Cập nhật sản phẩm với ID là chuỗi
-    }
-    setOpenDialog(false);
-  };
-  
+      if (!updatedProduct.id) {
+        const maxId =
+          productIds.length > 0 ? Math.max(...productIds.map(Number)) : 0;
+        productToSave.id = (maxId + 1).toString();
+      }
 
-  const handleAdd = () => {
-    // Tìm ID lớn nhất hiện tại trong danh sách sản phẩm để tạo ID mới tăng dần
-    // const maxId = productIds.length > 0 ? Math.max(...productIds) : 0;
+      if (dialogMode === "add") {
+        dispatch(addProduct(productToSave));
+      } else {
+        dispatch(updateProduct(productToSave));
+      }
+      setOpenDialog(false);
+    },
+    [dispatch, dialogMode, productIds]
+  );
 
-    // setSelectedProduct({
-    //   id: maxId + 1, // Tạo ID mới bằng cách cộng 1 với ID lớn nhất hiện tại
-    //   name: "",
-    //   available: 0,
-    //   sold: 0,
-    //   category: 0,
-    //   colors: [],
-    //   price: 0,
-    // });
+  const handleAdd = useCallback(() => {
     setDialogMode("add");
     setOpenDialog(true);
-  };
+  }, []);
 
   const totalAvailable = useMemo(() => {
     return productIds.reduce(
@@ -164,23 +148,11 @@ export default function Products() {
   const totalProducts = useMemo(() => productIds.length, [productIds]);
 
   return (
-    <div style={{ width: "100vw", paddingRight: "20px" }}>
+    <div style={productComponent}>
       <h1>Seller</h1>
-      <div
-        style={{
-          marginBottom: "20px",
-          display: "flex",
-        }}
-      >
+      <div style={totalAddComponent}>
         <div style={{ width: "50%" }}></div>
-        <div
-          style={{
-            width: "50%",
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-          }}
-        >
+        <div style={totalComponent}>
           <div style={totalField}>Total: {totalProducts}</div>
           <div style={totalField}>Available: {totalAvailable}</div>
           <div style={totalField}>Sold: {totalSold}</div>
@@ -227,8 +199,8 @@ export default function Products() {
         onClose={() => setOpenDialog(false)}
         onSubmit={handleSave}
         product={selectedProduct}
-        categories={categories || []} // Thêm giá trị mặc định []
-        colors={colors || []} // Tương tự cho colors
+        categories={categories || []}
+        colors={colors || []}
       />
     </div>
   );

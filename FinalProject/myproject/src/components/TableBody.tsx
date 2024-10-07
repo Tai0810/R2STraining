@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import TableRowComponent from "./TableRowComponent"; // Import component mới
+import TableRowComponent from "./TableRowComponent";
 
 const TableBody: React.FC<any> = ({
   products,

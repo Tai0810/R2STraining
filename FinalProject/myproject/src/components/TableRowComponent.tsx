@@ -50,4 +50,4 @@ const TableRowComponent: React.FC<TableRowComponentProps> = ({
   );
 };
 
-export default React.memo(TableRowComponent); // Dùng React.memo để tối ưu hóa
+export default React.memo(TableRowComponent);

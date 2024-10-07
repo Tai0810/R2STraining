@@ -19,11 +19,14 @@ export async function fetchJson(url: string) {
 export async function updateJson(
   url: string,
   body: any,
-  method: "PUT" | "POST" | "PATCH"
+  method: "PUT" | "POST" | "PATCH" = "POST"
 ) {
   try {
     const response = await fetch(url, {
-      method: method || "POST",
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(body),
     });
 
@@ -34,12 +37,12 @@ export async function updateJson(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(`Failed to ${method} data`, error);
+    console.error(`Failed to ${method} data to ${url}`, error);
     throw error;
   }
 }
 
-export async function deleteJson(url: string, id: string) {
+export async function deleteJson(url: string, id: string | number) {
   try {
     const response = await fetch(`${url}/${id}`, {
       method: "DELETE",
@@ -55,4 +58,3 @@ export async function deleteJson(url: string, id: string) {
     throw error;
   }
 }
-

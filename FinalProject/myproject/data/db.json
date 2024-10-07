@@ -15,10 +15,6 @@
     {
       "id": "3",
       "name": "Accessory"
-    },
-    {
-      "id": "b2fc",
-      "name": "new"
     }
   ],
   "colors": [
@@ -98,7 +94,7 @@
       "id": "5",
       "name": "Silver necklace",
       "available": 20,
-      "sold": 1,
+      "sold": 20,
       "categoryId": 3,
       "colorIds": [
         1

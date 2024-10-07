@@ -26,12 +26,18 @@ export const addProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async (product: Product) => {
-    const response = await updateJson(
-      `${BASE_URL}/products/${product.id}`,
-      product,
-      "PUT"
-    );
-    return response;
+    try {
+      const response = await updateJson(
+        `${BASE_URL}/products/${product.id}`,
+        product,
+        "PUT"
+      );
+      console.log("Update response:", response);
+      return response;
+    } catch (error) {
+      console.error("Update failed:", error);
+      throw error;
+    }
   }
 );
 
@@ -54,7 +60,7 @@ interface Product {
 }
 
 interface ProductState {
-  entities: Record<string, Product>; 
+  entities: Record<string, Product>;
   ids: string[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;

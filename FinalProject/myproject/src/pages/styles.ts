@@ -33,13 +33,56 @@ export const rootContent = {
   backgroundColor: "#ecf0f1",
 };
 
+export const productComponent = {
+  width: "100vw",
+  paddingRight: "20px",
+};
+
+export const totalAddComponent = {
+  marginBottom: "20px",
+  display: "flex",
+};
+
+export const totalComponent = {
+  width: "50%",
+  display: "flex",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+};
+
 export const totalField: React.CSSProperties = {
   backgroundColor: "lightgrey",
-  // flexDirection: "column",
   textAlign: "center",
-  // justifyContent: "center",
-  // alignItems: "center",
-  // margin: "10px",
   padding: "10px",
-  borderRadius: '5px'
+  borderRadius: "5px",
+};
+
+export const colorBody: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  marginBottom: "10px",
+  width: "60%",
+};
+
+export const colorItem = {
+  marginRight: "10px",
+  backgroundColor: "lightgray",
+  padding: "10px",
+  borderRadius: "20px",
+  display: "flex",
+  alignItems: "center",
+  marginBottom: "10px",
+};
+
+export const deleteColorItem = {
+  borderRadius: "50px",
+  backgroundColor: "grey",
+  width: "20px",
+  height: "20px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginLeft: "10px",
+  cursor: "pointer",
 };
