@@ -6,17 +6,11 @@ import {
   deleteColor,
 } from "../store/reducers/colorReducer";
 import { AppDispatch } from "../store";
-import { Button, ConfirmDialog } from "../components";
+import { Button, ConfirmDialog, Notification } from "../components";
 import ClearIcon from "@mui/icons-material/Clear";
-import {
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-} from "@mui/material";
-import { colorBody, colorItem, deleteColorItem } from "./styles";
+import { TextField } from "@mui/material";
+import { addColorComponent, colorBody, colorItem, deleteColorItem } from "./styles";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 
 const Color = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,6 +23,10 @@ const Color = () => {
   const [newColor, setNewColor] = useState("");
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   useEffect(() => {
     if (status === "idle") {
@@ -44,6 +42,10 @@ const Color = () => {
           : "1";
       dispatch(addColor({ id: newColorId, name: newColor }));
       setNewColor("");
+      setNotification({
+        message: "Color added successfully!",
+        type: "success",
+      });
     }
   }, [colorIds, dispatch, newColor]);
 
@@ -60,6 +62,10 @@ const Color = () => {
   const handleConfirmDelete = useCallback(() => {
     if (selectedColorId !== null) {
       dispatch(deleteColor(selectedColorId));
+      setNotification({
+        message: "Color deleted successfully!",
+        type: "success",
+      });
     }
     handleCloseDialog();
   }, [selectedColorId, dispatch, handleCloseDialog]);
@@ -77,37 +83,29 @@ const Color = () => {
 
   return (
     <div style={{ width: "100vw" }}>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <h1>Color List</h1>
       <div style={{ display: "flex" }}>
         <div style={colorBody}>{colorList}</div>
 
-        <div style={{ width: "30%" }}>
+        <div
+          style={addColorComponent}
+        >
           <TextField
             value={newColor}
             onChange={(e) => setNewColor(e.target.value)}
             placeholder="Add a new color"
             style={{ marginRight: "10px" }}
           />
-          <Button variant="contained" label="Add" onClick={handleAddColor} />
+          <Button variant="outlined" label="Add" color="success" startIcon={<AddToPhotosIcon />} onClick={handleAddColor} />
         </div>
       </div>
-      {/* <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this color?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button label="Cancel" onClick={handleCloseDialog} />
-          <Button label="Confirm" onClick={handleConfirmDelete} color="error" />
-        </DialogActions>
-      </Dialog> */}
       <ConfirmDialog
         open={openDialog}
         onClose={handleCloseDialog}

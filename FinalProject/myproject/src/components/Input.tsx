@@ -21,7 +21,6 @@ const Input = forwardRef<HTMLInputElement, Props>(
     },
     ref
   ) => {
-    // const [currenValue, setCurrentValue] = useState(value);
     return (
       <TextField
         label={label}

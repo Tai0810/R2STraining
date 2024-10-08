@@ -3,14 +3,13 @@ import { validateLoginForm } from "../util/validation";
 import { Button, Input } from "../components";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { loginStyle } from "./styles";
+import { loginButtonStyle, loginStyle } from "./styles";
 import { AppDispatch } from "../store";
 import { login as handleLogin } from "../store/reducers/authReducer";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const auth = useSelector((state: any) => state.auth);
   const inputsRefs = useRef<{ [key: string]: HTMLInputElement | null }>({
     email: null,
@@ -71,12 +70,14 @@ const Login = () => {
           error={errors.email}
         />
         <Input
-          label="Password" 
+          label="Password"
           type="password"
           ref={(element) => (inputsRefs.current.password = element)}
           error={errMessage}
         />
-        <Button label={"Login"} variant="contained" color="success"/>
+        <div style={loginButtonStyle}>
+          <Button label={"Login"} variant="contained" color="success" />
+        </div>
       </Box>
     </div>
   );

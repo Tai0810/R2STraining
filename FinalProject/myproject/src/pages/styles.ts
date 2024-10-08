@@ -6,6 +6,12 @@ export const loginStyle = {
   width: "400px",
 };
 
+export const loginButtonStyle = {
+  display: "flex",
+  justifyContent: "flex-end",
+  marginTop: "20px",
+};
+
 export const rootContainer = {
   display: "flex",
 };
@@ -85,4 +91,10 @@ export const deleteColorItem = {
   alignItems: "center",
   marginLeft: "10px",
   cursor: "pointer",
+};
+
+export const addColorComponent = {
+  display: "flex",
+  width: "30%",
+  alignItems: "center",
 };

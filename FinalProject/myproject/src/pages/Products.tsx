@@ -13,14 +13,20 @@ import {
   updateProduct,
 } from "../store/reducers/productReducer";
 import { AppDispatch } from "../store";
-import TableBody from "./../components/TableBody";
 import {
   productComponent,
   totalAddComponent,
   totalComponent,
   totalField,
 } from "./styles";
-import { Button, ConfirmDialog, ProductDialog } from "../components";
+import {
+  Button,
+  ConfirmDialog,
+  Notification,
+  PaginationControl,
+  ProductDialog,
+  TableBody,
+} from "../components";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { fetchColors } from "../store/reducers/colorReducer";
 import { fetchCategories } from "../store/reducers/categoryReducer";
@@ -62,6 +68,10 @@ export default function Products() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(productIds.length / ITEMS_PER_PAGE);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const handleDelete = useCallback((productId: any) => {
     setProductIdToDelete(productId);
@@ -73,6 +83,10 @@ export default function Products() {
       dispatch(deleteProduct(productIdToDelete));
       setProductIdToDelete(null);
       setOpenConfirmDialog(false);
+      setNotification({
+        message: "Product deleted successfully!",
+        type: "success",
+      });
     }
   }, [productIdToDelete, dispatch]);
 
@@ -91,7 +105,6 @@ export default function Products() {
   const handleEdit = useCallback(
     (productId: any) => {
       setSelectedProduct(products[productId]);
-      console.log("Editing product:", products[productId]);
       setDialogMode("edit");
       setOpenDialog(true);
     },
@@ -112,13 +125,18 @@ export default function Products() {
           productIds.length > 0 ? Math.max(...productIds.map(Number)) : 0;
         productToSave.id = (maxId + 1).toString();
         dispatch(addProduct(productToSave));
+        setNotification({
+          message: "Product added successfully!",
+          type: "success",
+        });
       } else if (updatedProduct.id) {
         productToSave.id = updatedProduct.id.toString();
-        console.log("testUpdate", productToSave.id);
-        
         dispatch(updateProduct(productToSave));
+        setNotification({
+          message: "Product updated successfully!",
+          type: "success",
+        });
       }
-
       setOpenDialog(false);
     },
     [dispatch, dialogMode, productIds]
@@ -161,6 +179,13 @@ export default function Products() {
 
   return (
     <div style={productComponent}>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <h1>Seller</h1>
       <div style={totalAddComponent}>
         <div style={{ width: "50%" }}></div>
@@ -198,26 +223,13 @@ export default function Products() {
           />
         </Table>
       </TableContainer>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginTop: "10px",
-        }}
-      >
-        <Button
-          label="Previous"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        />
-        <Button
-          label="Next"
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        />
-      </div>
+
+      <PaginationControl
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPrevious={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      />
 
       <ConfirmDialog
         open={openConfirmDialog}

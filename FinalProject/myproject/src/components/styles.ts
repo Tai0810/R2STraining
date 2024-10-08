@@ -11,6 +11,43 @@ export const drawerStyle = {
   marginRight: "20px",
 };
 
-export const btnLoginStyle = {
-  marginTop: "20px",
+export const rowCategoryList = {
+  display: "flex",
+  alignItems: "center",
 };
+
+export const rowButtonCategoryList = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-evenly",
+  width: "30%",
+};
+
+export const actionComponent = {
+  display: "flex",
+  justifyContent: "space-evenly",
+};
+
+export const notificationStyles: React.CSSProperties = {
+  position: "fixed",
+  top: "20px",
+  right: "20px",
+  padding: "10px",
+  borderRadius: "5px",
+  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+  minWidth: "200px",
+  textAlign: "center",
+};
+
+export const successStyle: React.CSSProperties = {
+  ...notificationStyles,
+  backgroundColor: "green",
+  color: "white",
+};
+
+export const errorStyle: React.CSSProperties = {
+  ...notificationStyles,
+  backgroundColor: "red",
+  color: "white",
+};
+

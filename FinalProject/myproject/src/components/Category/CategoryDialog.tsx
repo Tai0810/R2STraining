@@ -20,7 +20,6 @@ const CategoryDialog: React.FC<CategoryDialogProps> = React.memo(
   ({ open, onClose, onSubmit }) => {
     const [categoryName, setCategoryName] = useState<string>("");
 
-    // Hàm xử lý khi nhấn nút "Save" để gửi dữ liệu
     const handleSubmit = useCallback(() => {
       if (categoryName.trim()) {
         onSubmit({ name: categoryName });

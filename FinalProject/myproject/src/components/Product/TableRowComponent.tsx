@@ -3,7 +3,8 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Button from "./Button";
+import Button from "../Button";
+import { actionComponent } from "../styles";
 
 interface TableRowComponentProps {
   product: any;
@@ -31,9 +32,7 @@ const TableRowComponent: React.FC<TableRowComponentProps> = ({
       <TableCell>{category}</TableCell>
       <TableCell>{colors}</TableCell>
       <TableCell>{product.price.toLocaleString()}</TableCell>
-      <TableCell
-        style={{ display: "flex", justifyContent: "space-evenly" }}
-      >
+      <TableCell style={actionComponent}>
         <Button
           label="Edit"
           onClick={() => onEdit(product.id)}

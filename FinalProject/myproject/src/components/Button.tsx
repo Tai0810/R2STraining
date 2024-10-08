@@ -1,5 +1,4 @@
 import ButtonMU from "@mui/material/Button";
-import { btnLoginStyle } from "./styles";
 
 type Props = {
   label: string;
@@ -25,7 +24,6 @@ const Button = ({
     disableElevation
     color={color}
     type={type}
-    style={btnLoginStyle}
     onClick={onClick}
     startIcon={startIcon}
     disabled={disabled}

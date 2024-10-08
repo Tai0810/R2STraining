@@ -15,6 +15,26 @@
     {
       "id": "3",
       "name": "Accessory"
+    },
+    {
+      "id": "4",
+      "name": "sdafdaaaaaa"
+    },
+    {
+      "id": "5",
+      "name": "new"
+    },
+    {
+      "id": "6",
+      "name": "test"
+    },
+    {
+      "id": "7",
+      "name": "oke"
+    },
+    {
+      "id": "8",
+      "name": "aa"
     }
   ],
   "colors": [
@@ -97,7 +117,8 @@
       "sold": 20,
       "categoryId": 3,
       "colorIds": [
-        1
+        1,
+        6
       ],
       "price": 1450000
     },
@@ -114,17 +135,40 @@
       "price": 1600000
     },
     {
-      "id": "7",
-      "name": "Nike 2",
-      "available": 10,
-      "sold": 6,
-      "categoryId": 3,
+      "id": "9",
+      "name": "CD Shop",
+      "available": 4,
+      "sold": 4,
+      "categoryId": 4,
       "colorIds": [
-        2,
-        3,
-        4
+        6,
+        5
       ],
-      "price": 1600000
+      "price": 5
+    },
+    {
+      "id": "10",
+      "name": "CD Shop",
+      "available": 5,
+      "sold": 2,
+      "categoryId": 2,
+      "colorIds": [
+        1,
+        2
+      ],
+      "price": 3
+    },
+    {
+      "id": "11",
+      "name": "Võ Trọng Tài",
+      "available": 5,
+      "sold": 4,
+      "categoryId": 2,
+      "colorIds": [
+        6,
+        5
+      ],
+      "price": 3
     }
   ]
 }

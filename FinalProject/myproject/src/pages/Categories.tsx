@@ -8,12 +8,16 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
 } from "@mui/material";
 import { AppDispatch } from "../store";
-import { Button, ConfirmDialog } from "../components";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Button,
+  CategoryList,
+  ConfirmDialog,
+  Notification,
+  PaginationControl,
+} from "../components";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import {
   addCategory,
   deleteCategory,
@@ -31,6 +35,9 @@ const Categories = () => {
     ids: categoryIds = [],
     status,
   } = useSelector((state: any) => state.category);
+  const { entities: products = [] } = useSelector(
+    (state: any) => state.product
+  );
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState<string>("");
@@ -38,9 +45,14 @@ const Categories = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
+  const [productCount, setProductCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   useEffect(() => {
     if (status === "idle") {
@@ -59,7 +71,6 @@ const Categories = () => {
   const handleSave = useCallback(
     (id: string) => {
       if (id === "new") {
-        // Add new category
         const maxId =
           categoryIds.length > 0 ? Math.max(...categoryIds.map(Number)) : 0;
         const newCategory = {
@@ -69,10 +80,17 @@ const Categories = () => {
         dispatch(addCategory(newCategory));
         setIsAdding(false);
         setNewCategoryName("");
+        setNotification({
+          message: "Category added successfully!",
+          type: "success",
+        });
       } else {
-        // Update existing category
         dispatch(updateCategory({ id, name: editName }));
         setEditId(null);
+        setNotification({
+          message: "Category updated successfully!",
+          type: "success",
+        });
       }
     },
     [editName, newCategoryName, categoryIds, dispatch]
@@ -85,10 +103,23 @@ const Categories = () => {
     setNewCategoryName("");
   }, []);
 
-  const handleDeleteClick = useCallback((id: string) => {
-    setSelectedCategoryId(id);
-    setOpenDialog(true);
-  }, []);
+  const handleDeleteClick = useCallback(
+    (id: string) => {
+      if (Array.isArray(products)) {
+        const count = products.filter(
+          (product: any) => product.categoryId === id
+        ).length;
+        console.log("count", count);
+        setProductCount(count);
+      } else {
+        console.log("test");
+        setProductCount(0);
+      }
+      setSelectedCategoryId(id);
+      setOpenDialog(true);
+    },
+    [products]
+  );
 
   const handleCloseDialog = useCallback(() => {
     setOpenDialog(false);
@@ -98,6 +129,10 @@ const Categories = () => {
   const handleConfirmDelete = useCallback(() => {
     if (selectedCategoryId) {
       dispatch(deleteCategory(selectedCategoryId));
+      setNotification({
+        message: "Category deleted successfully!",
+        type: "success",
+      });
     }
     handleCloseDialog();
   }, [selectedCategoryId, dispatch, handleCloseDialog]);
@@ -113,63 +148,15 @@ const Categories = () => {
     return categoryIds.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [currentPage, categoryIds]);
 
-  const categoryList = useMemo(() => {
-    return paginatedCategoryIds.map((id: string, index: number) => (
-      <TableRow
-        key={id}
-        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-      >
-        <TableCell component="th" scope="row">
-          {index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}
-        </TableCell>
-        <TableCell>
-          {editId === id ? (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <TextField
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                variant="outlined"
-                size="small"
-              />
-              <Button label="Save" onClick={() => handleSave(id)} />
-              <Button label="Cancel" onClick={handleCancel} />
-            </div>
-          ) : (
-            categories[id].name
-          )}
-        </TableCell>
-
-        <TableCell>
-          <div>
-            <Button
-              label="Edit"
-              startIcon={<EditIcon />}
-              color="success"
-              onClick={() => handleEdit(id)}
-            />
-            <Button
-              label="Delete"
-              startIcon={<DeleteIcon />}
-              color="error"
-              onClick={() => handleDeleteClick(id)}
-            />
-          </div>
-        </TableCell>
-      </TableRow>
-    ));
-  }, [
-    paginatedCategoryIds,
-    categories,
-    editId,
-    editName,
-    handleEdit,
-    handleSave,
-    handleCancel,
-    handleDeleteClick,
-  ]);
-
   return (
     <div style={{ width: "100vw", paddingRight: "20px" }}>
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <h1>Categories List</h1>
       <div
         style={{
@@ -181,6 +168,7 @@ const Categories = () => {
         <Button
           label="Add"
           color="success"
+          startIcon={<AddToPhotosIcon />}
           onClick={handleAddCategory}
           disabled={isAdding}
         />
@@ -198,56 +186,44 @@ const Categories = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {categoryList}
-            {isAdding && (
-              <TableRow>
-                <TableCell>{categoryIds.length + 1}</TableCell>
-                <TableCell>
-                  <TextField
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    variant="outlined"
-                    size="small"
-                    placeholder="Enter new category name"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Button label="Save" onClick={() => handleSave("new")} />
-                  <Button label="Cancel" onClick={handleCancel} />
-                </TableCell>
-              </TableRow>
-            )}
+            <CategoryList
+              paginatedCategoryIds={paginatedCategoryIds}
+              categories={categories}
+              currentPage={currentPage}
+              itemsPerPage={ITEMS_PER_PAGE}
+              editId={editId}
+              editName={editName}
+              isAdding={isAdding}
+              newCategoryName={newCategoryName}
+              onEdit={handleEdit}
+              onSave={handleSave}
+              onCancel={handleCancel}
+              onDeleteClick={handleDeleteClick}
+              onNewCategoryChange={(e) => {
+                if (editId) {
+                  setEditName(e.target.value);
+                } else {
+                  setNewCategoryName(e.target.value);
+                }
+              }}
+            />
           </TableBody>
         </Table>
       </TableContainer>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginTop: "10px",
-        }}
-      >
-        <Button
-          label="Previous"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        />
-        <Button
-          label="Next"
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        />
-      </div>
+      <PaginationControl
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPrevious={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        onNext={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      />
 
       <ConfirmDialog
         open={openDialog}
         onClose={handleCloseDialog}
         onConfirm={handleConfirmDelete}
         title="Confirm Deletion"
-        message="Are you sure you want to delete this category?"
+        message={`This category is being used by ${productCount} product(s). Are you sure you want to delete it?`}
       />
     </div>
   );
