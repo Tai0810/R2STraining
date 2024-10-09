@@ -30,11 +30,11 @@
     },
     {
       "id": "7",
-      "name": "oke"
+      "name": "okeaaxx"
     },
     {
       "id": "8",
-      "name": "aa"
+      "name": "eeee"
     }
   ],
   "colors": [
@@ -155,18 +155,6 @@
       "colorIds": [
         1,
         2
-      ],
-      "price": 3
-    },
-    {
-      "id": "11",
-      "name": "Võ Trọng Tài",
-      "available": 5,
-      "sold": 4,
-      "categoryId": 2,
-      "colorIds": [
-        6,
-        5
       ],
       "price": 3
     }

@@ -1,13 +1,7 @@
 import React from "react";
-import { TableRow, TableCell, TextField } from "@mui/material";
-import { Button } from "..";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  actionComponent,
-  rowButtonCategoryList,
-  rowCategoryList,
-} from "../styles";
+import CategoryRow from "./CategoryRow";
+import CategoryInput from "./CategoryInput";
+import { TableRow, TableCell } from "@mui/material";
 
 interface CategoryListProps {
   paginatedCategoryIds: string[];
@@ -19,7 +13,7 @@ interface CategoryListProps {
   isAdding: boolean;
   newCategoryName: string;
   onEdit: (id: string) => void;
-  onSave: (id: string) => void;
+  onSave: (id?: string) => void; 
   onCancel: () => void;
   onDeleteClick: (id: string) => void;
   onNewCategoryChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -43,62 +37,31 @@ const CategoryList: React.FC<CategoryListProps> = ({
   return (
     <>
       {paginatedCategoryIds.map((id: string, index: number) => (
-        <TableRow
+        <CategoryRow
           key={id}
-          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-        >
-          <TableCell component="th" scope="row">
-            {index + 1 + (currentPage - 1) * itemsPerPage}
-          </TableCell>
-          <TableCell style={{ width: "60%" }}>
-            {editId === id ? (
-              <div style={rowCategoryList}>
-                <TextField
-                  value={editName}
-                  onChange={onNewCategoryChange}
-                  variant="outlined"
-                  size="small"
-                />
-                <div style={rowButtonCategoryList}>
-                  <Button label="Save" onClick={() => onSave(id)} />
-                  <Button label="Cancel" color="warning" onClick={onCancel} />
-                </div>
-              </div>
-            ) : (
-              categories[id].name
-            )}
-          </TableCell>
-
-          <TableCell style={actionComponent}>
-            <Button
-              label="Edit"
-              startIcon={<EditIcon />}
-              onClick={() => onEdit(id)}
-            />
-            <Button
-              label="Delete"
-              startIcon={<DeleteIcon />}
-              color="error"
-              onClick={() => onDeleteClick(id)}
-            />
-          </TableCell>
-        </TableRow>
+          id={id}
+          index={index + (currentPage - 1) * itemsPerPage}
+          editId={editId}
+          editName={editName}
+          categoryName={categories[id].name}
+          isEditing={editId === id}
+          onEdit={onEdit}
+          onSave={onSave}
+          onCancel={onCancel}
+          onDeleteClick={onDeleteClick}
+          onNewCategoryChange={onNewCategoryChange}
+        />
       ))}
       {isAdding && (
         <TableRow>
           <TableCell>{paginatedCategoryIds.length + 1}</TableCell>
-          <TableCell style={rowCategoryList}>
-            <TextField
-              value={newCategoryName}
-              onChange={onNewCategoryChange}
-              variant="outlined"
-              size="small"
-              placeholder="Enter new category name"
+          <TableCell>
+            <CategoryInput
+              name={newCategoryName}
+              onNameChange={onNewCategoryChange}
+              onSave={onSave} 
+              onCancel={onCancel}
             />
-            <div style={rowButtonCategoryList}>
-              <Button label="Save" onClick={() => onSave("new")} />
-              <Button label="Cancel" color="warning" onClick={onCancel} />
-            </div>
           </TableCell>
         </TableRow>
       )}

@@ -92,6 +92,7 @@ export default function Products() {
 
   const handleCloseDialog = useCallback(() => {
     setOpenConfirmDialog(false);
+    // setSelectedProduct(null);
   }, []);
 
   useEffect(() => {
@@ -193,7 +194,7 @@ export default function Products() {
           <div style={totalField}>Total: {totalProducts}</div>
           <div style={totalField}>Available: {totalAvailable}</div>
           <div style={totalField}>Sold: {totalSold}</div>
-          <div style={totalField}>Revenue: {revenue.toLocaleString()}</div>
+          <div style={totalField}>Revenue: {revenue}</div>
           <Button
             label="Add"
             color="success"

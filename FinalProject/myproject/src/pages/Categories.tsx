@@ -69,8 +69,8 @@ const Categories = () => {
   );
 
   const handleSave = useCallback(
-    (id: string) => {
-      if (id === "new") {
+    (id?: string) => {
+      if (!id) {
         const maxId =
           categoryIds.length > 0 ? Math.max(...categoryIds.map(Number)) : 0;
         const newCategory = {
