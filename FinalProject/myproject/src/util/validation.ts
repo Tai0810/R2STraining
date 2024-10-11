@@ -1,5 +1,5 @@
 export const validateLoginForm = (email?: string, password?: string) => {
-  const errors = {email: '', password: ''};
+  const errors = { email: "", password: "" };
 
   if (!email) {
     errors.email = "Email is required.";
@@ -23,41 +23,35 @@ interface Product {
   price: number;
 }
 
-export const validateProductForm = (formData: Product): string | null => {
-  if (!formData.name.trim()) {
+export const validateProductForm = (product: Product): string | null => {
+  if (!product.name.trim()) {
     return "Product name is required";
   }
-  if (formData.available < 0) {
-    return "Available quantity cannot be negative";
+  if (product.available < 0) {
+    return "Available must be a non-negative number";
   }
-  if (formData.price <= 0) {
-    return "Price must be greater than zero";
+  if (product.sold < 0) {
+    return "Sold must be a non-negative number";
   }
-  if (formData.categoryId === 0) {
-    return "Please select a category";
+  if (product.colorIds.length === 0) {
+    return "At least one color must be selected";
   }
-  if (formData.colorIds.length === 0) {
-    return "Please select at least one color";
-  }
-  return null; 
-};
-
-export const validateCategory = (categoryName: string): string | null => {
-  if (!categoryName.trim()) {
-    return "Category name is required";
-  }
-  if (categoryName.length > 20) {
-    return "Category name must be less than 20 characters";
+  if (product.price < 0) {
+    return "Price must be a non-negative number";
   }
   return null;
 };
 
-export const validateColor = (colorName: string): string | null => {
-  if (!colorName.trim()) {
-    return "Category name is required";
+export const validateName = (name: string, type: "category" | "color"): string | null => {
+  const isCategory = type === "category";
+  
+  if (!name.trim()) {
+    return `${isCategory ? 'Category' : 'Color'} name is required`;
   }
-  if (colorName.length > 10) {
-    return "Category name must be less than 10 characters";
+  
+  if ((isCategory && name.length > 20) || (!isCategory && name.length > 10)) {
+    return `${isCategory ? 'Category' : 'Color'} name must be less than ${isCategory ? 20 : 10} characters`;
   }
+  
   return null;
 };

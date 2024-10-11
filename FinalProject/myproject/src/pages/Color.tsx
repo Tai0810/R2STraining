@@ -16,7 +16,7 @@ import {
   deleteColorItem,
 } from "./styles";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import { validateColor } from "../util/validation";
+import { validateName } from "../util/validation";
 
 const Color = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -53,7 +53,7 @@ const Color = () => {
   }, []);
 
   const handleAddColor = useCallback(async (id?: string) => {
-      const error = validateColor(newColor);
+    const error = validateName(newColor, "color");
       if (error) {
         alert(error);
         return;

@@ -23,6 +23,10 @@
     {
       "id": "5",
       "name": "Shirt"
+    },
+    {
+      "id": "6",
+      "name": "New"
     }
   ],
   "colors": [
@@ -144,6 +148,18 @@
         5
       ],
       "price": 5000000
+    },
+    {
+      "id": "10",
+      "name": "aa",
+      "available": 2,
+      "sold": 2,
+      "categoryId": 0,
+      "colorIds": [
+        5,
+        4
+      ],
+      "price": 2
     }
   ]
 }

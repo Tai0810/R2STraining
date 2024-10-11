@@ -30,6 +30,7 @@ import {
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { fetchColors } from "../store/reducers/colorReducer";
 import { fetchCategories } from "../store/reducers/categoryReducer";
+import { Navigate } from "react-router-dom";
 
 const headers = [
   { text: "No" },

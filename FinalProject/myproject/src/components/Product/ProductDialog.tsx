@@ -33,7 +33,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
       name: "",
       available: 0,
       sold: 0,
-      categoryId: 0,
+      categoryId: 1,
       colorIds: [] as number[],
       price: 0,
     });
@@ -44,7 +44,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
         name: product?.name || "",
         available: product?.available || 0,
         sold: product?.sold || 0,
-        categoryId: product?.categoryId || 0,
+        categoryId: product?.categoryId || 1,
         colorIds: product?.colorIds || [],
         price: product?.price || 0,
       });

@@ -24,7 +24,7 @@ import {
   fetchCategories,
   updateCategory,
 } from "../store/reducers/categoryReducer";
-import { validateCategory } from "../util/validation";
+import { validateName } from "../util/validation";
 
 const ITEMS_PER_PAGE = 5;
 const headers = [{ text: "No" }, { text: "Name" }, { text: "" }];
@@ -88,7 +88,7 @@ const Categories = () => {
   const handleSave = useCallback(
     async (id?: string) => {
       const nameToValidate = id ? editName : newCategoryName;
-      const error = validateCategory(nameToValidate);
+      const error = validateName(nameToValidate, "category");
       if (error) {
         alert(error);
         return;
