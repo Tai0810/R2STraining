@@ -133,6 +133,17 @@
         2
       ],
       "price": 1450000
+    },
+    {
+      "id": "9",
+      "name": "CD Shop",
+      "available": 3,
+      "sold": 4,
+      "categoryId": 2,
+      "colorIds": [
+        5
+      ],
+      "price": 5000000
     }
   ]
 }

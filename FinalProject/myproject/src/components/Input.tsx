@@ -8,6 +8,7 @@ type Props = {
   type?: string;
   value?: string;
   error?: string;
+  // onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Input = forwardRef<HTMLInputElement, Props>(
@@ -18,6 +19,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
       value = "",
       error = "",
       placeholder = "",
+      // onChange,
     },
     ref
   ) => {
@@ -29,6 +31,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
         error={!!error}
         helperText={error}
         type={type}
+        // onChange={onChange}
         inputRef={ref}
         style={inputStyles}
       />

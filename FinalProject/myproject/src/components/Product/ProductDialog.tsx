@@ -6,6 +6,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { validateProductForm } from "../../util/validation";
 
 interface Product {
   id?: number;
@@ -59,9 +60,12 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
     }, []);
 
     const handleSubmit = useCallback(() => {
+      const error = validateProductForm(formData);
+      if (error) {
+        alert(error);
+        return;
+      }
       console.log("Submitting product:", formData);
-      console.log("ID Type:", typeof formData.id);
-      console.log("Updated Product ID:", formData.id);
       onSubmit(formData);
       onClose();
     }, [formData, onSubmit, onClose]);
