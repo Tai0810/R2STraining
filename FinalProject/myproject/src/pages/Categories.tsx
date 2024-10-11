@@ -60,6 +60,22 @@ const Categories = () => {
     }
   }, [status, dispatch]);
 
+  const handleNotification = useCallback(
+    (message: string, type: "success" | "error") => {
+      setNotification({ message, type });
+    },
+    []
+  );
+
+  const handleCloseDialog = useCallback(() => {
+    setOpenDialog(false);
+    setSelectedCategoryId(null);
+  }, []);
+
+  const handleAddCategory = () => {
+    setIsAdding(true);
+  };
+
   const handleEdit = useCallback(
     (id: string) => {
       setEditId(id);
@@ -69,7 +85,7 @@ const Categories = () => {
   );
 
   const handleSave = useCallback(
-    (id?: string) => {
+    async (id?: string) => {
       if (!id) {
         const maxId =
           categoryIds.length > 0 ? Math.max(...categoryIds.map(Number)) : 0;
@@ -77,23 +93,28 @@ const Categories = () => {
           id: (maxId + 1).toString(),
           name: newCategoryName,
         };
-        dispatch(addCategory(newCategory));
+
+        const resultAction = await dispatch(addCategory(newCategory));
+        if (addCategory.fulfilled.match(resultAction)) {
+          handleNotification("Category added successfully!", "success");
+        } else {
+          handleNotification("Failed to add category", "error");
+        }
         setIsAdding(false);
         setNewCategoryName("");
-        setNotification({
-          message: "Category added successfully!",
-          type: "success",
-        });
       } else {
-        dispatch(updateCategory({ id, name: editName }));
+        const resultAction = await dispatch(
+          updateCategory({ id, name: editName })
+        );
+        if (updateCategory.fulfilled.match(resultAction)) {
+          handleNotification("Category updated successfully!", "success");
+        } else {
+          handleNotification("Failed to update category", "error");
+        }
         setEditId(null);
-        setNotification({
-          message: "Category updated successfully!",
-          type: "success",
-        });
       }
     },
-    [editName, newCategoryName, categoryIds, dispatch]
+    [editName, newCategoryName, categoryIds, dispatch, handleNotification]
   );
 
   const handleCancel = useCallback(() => {
@@ -103,43 +124,24 @@ const Categories = () => {
     setNewCategoryName("");
   }, []);
 
-  const handleDeleteClick = useCallback(
-    (id: string) => {
-      if (Array.isArray(products)) {
-        const count = products.filter(
-          (product: any) => product.categoryId === id
-        ).length;
-        console.log("count", count);
-        setProductCount(count);
-      } else {
-        console.log("test");
-        setProductCount(0);
-      }
-      setSelectedCategoryId(id);
-      setOpenDialog(true);
-    },
-    [products]
-  );
-
-  const handleCloseDialog = useCallback(() => {
-    setOpenDialog(false);
-    setSelectedCategoryId(null);
+  const handleDeleteClick = useCallback((id: string) => {
+    // const count = products.filter((product: any) => product.categoryId === id).length;
+    // setProductCount(count);
+    setSelectedCategoryId(id);
+    setOpenDialog(true);
   }, []);
 
-  const handleConfirmDelete = useCallback(() => {
+  const handleConfirmDelete = useCallback(async () => {
     if (selectedCategoryId) {
-      dispatch(deleteCategory(selectedCategoryId));
-      setNotification({
-        message: "Category deleted successfully!",
-        type: "success",
-      });
+      const resultAction = await dispatch(deleteCategory(selectedCategoryId));
+      if (deleteCategory.fulfilled.match(resultAction)) {
+        handleNotification("Category deleted successfully!", "success");
+      } else {
+        handleNotification("Failed to delete category", "error");
+      }
     }
     handleCloseDialog();
-  }, [selectedCategoryId, dispatch, handleCloseDialog]);
-
-  const handleAddCategory = () => {
-    setIsAdding(true);
-  };
+  }, [selectedCategoryId, dispatch, handleCloseDialog, handleNotification]);
 
   const totalPages = Math.ceil(categoryIds.length / ITEMS_PER_PAGE);
 

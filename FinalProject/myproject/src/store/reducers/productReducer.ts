@@ -32,10 +32,8 @@ export const updateProduct = createAsyncThunk(
         product,
         "PUT"
       );
-      console.log("Update response:", response);
       return response;
     } catch (error) {
-      console.error("Update failed:", error);
       throw error;
     }
   }
@@ -64,6 +62,7 @@ interface ProductState {
   ids: string[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  notification: string | null; 
 }
 
 const initialState: ProductState = {
@@ -71,12 +70,17 @@ const initialState: ProductState = {
   ids: [],
   status: "idle",
   error: null,
+  notification: null, 
 };
 
 const productSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    clearNotification: (state) => {
+      state.notification = null;  
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchProducts.pending, (state) => {
@@ -89,35 +93,48 @@ const productSlice = createSlice({
         products.forEach((product) => {
           state.entities[product.id.toString()] = product;
         });
+        state.notification = "Products fetched successfully!";
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action?.error.message || "Failed to fetch products";
+        state.notification = state.error;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         const addedProduct: Product = action.payload;
         const newId = addedProduct.id.toString();
         state.entities[newId] = addedProduct;
         state.ids.push(newId);
+        state.notification = "Product added successfully!";
+      })
+      .addCase(addProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action?.error.message || "Failed to add product";
+        state.notification = state.error;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         const updatedProduct: Product = action.payload;
         state.entities[updatedProduct.id.toString()] = updatedProduct;
+        state.notification = "Product updated successfully!";
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action?.error.message || "Failed to update product";
+        state.notification = state.error;
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         const productId = action.payload.toString();
         delete state.entities[productId];
         state.ids = state.ids.filter((id) => id !== productId);
-      })
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action?.error.message || "Failed to update product";
+        state.notification = "Product deleted successfully!";
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.status = "failed";
         state.error = action?.error.message || "Failed to delete product";
+        state.notification = state.error;
       });
   },
 });
 
+export const { clearNotification } = productSlice.actions; 
 export const productReducer = productSlice.reducer;

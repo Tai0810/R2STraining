@@ -4,11 +4,11 @@ import { Button } from "..";
 import { rowCategoryList, rowButtonCategoryList } from "../styles";
 
 interface CategoryInputProps {
-  id?: string; // ID sẽ là undefined khi thêm mới
-  name: string; // Tên category (được sử dụng cho cả thêm mới và chỉnh sửa)
-  onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Hàm để xử lý sự thay đổi tên
-  onSave: (id?: string) => void; // Hàm để lưu category
-  onCancel: () => void; // Hàm để hủy
+  id?: string;
+  name: string; 
+  onNameChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
+  onSave: (id?: string) => void; 
+  onCancel: () => void; 
 }
 
 const CategoryInput: React.FC<CategoryInputProps> = ({

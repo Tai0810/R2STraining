@@ -6,7 +6,7 @@
   "categories": [
     {
       "id": "1",
-      "name": "cloth"
+      "name": "Cloth"
     },
     {
       "id": "2",
@@ -18,23 +18,11 @@
     },
     {
       "id": "4",
-      "name": "sdafdaaaaaa"
+      "name": "Shoe"
     },
     {
       "id": "5",
-      "name": "new"
-    },
-    {
-      "id": "6",
-      "name": "test"
-    },
-    {
-      "id": "7",
-      "name": "okeaaxx"
-    },
-    {
-      "id": "8",
-      "name": "eeee"
+      "name": "Shirt"
     }
   ],
   "colors": [
@@ -104,7 +92,7 @@
       "name": "Silver necklace",
       "available": 30,
       "sold": 1,
-      "categoryId": 3,
+      "categoryId": 2,
       "colorIds": [
         3
       ],
@@ -117,8 +105,8 @@
       "sold": 20,
       "categoryId": 3,
       "colorIds": [
-        1,
-        6
+        6,
+        5
       ],
       "price": 1450000
     },
@@ -130,33 +118,21 @@
       "categoryId": 3,
       "colorIds": [
         4,
+        3,
         5
       ],
       "price": 1600000
     },
     {
-      "id": "9",
-      "name": "CD Shop",
-      "available": 4,
-      "sold": 4,
-      "categoryId": 4,
+      "id": "8",
+      "name": "Silver necklace",
+      "available": 20,
+      "sold": 25,
+      "categoryId": 3,
       "colorIds": [
-        6,
-        5
-      ],
-      "price": 5
-    },
-    {
-      "id": "10",
-      "name": "CD Shop",
-      "available": 5,
-      "sold": 2,
-      "categoryId": 2,
-      "colorIds": [
-        1,
         2
       ],
-      "price": 3
+      "price": 1450000
     }
   ]
 }

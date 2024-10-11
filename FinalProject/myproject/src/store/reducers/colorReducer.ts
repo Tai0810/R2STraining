@@ -36,6 +36,7 @@ interface ColorState {
   ids: string[]; 
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  notification: string | null;  // Added notification
 }
 
 const initialState: ColorState = {
@@ -43,12 +44,17 @@ const initialState: ColorState = {
   ids: [],
   status: "idle",
   error: null,
+  notification: null,  // Initial notification set to null
 };
 
 const colorSlice = createSlice({
   name: "colors",
   initialState,
-  reducers: {},
+  reducers: {
+    clearNotification: (state) => {
+      state.notification = null;  // Action to clear notification
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchColors.pending, (state) => {
@@ -61,28 +67,39 @@ const colorSlice = createSlice({
         colors.forEach((color) => {
           state.entities[color.id] = color;
         });
+        state.notification = "Colors fetched successfully!";
       })
       .addCase(fetchColors.rejected, (state, action) => {
         state.status = "failed";
         state.error = action?.error.message || "Failed to fetch colors";
+        state.notification = state.error;
       })
       // Add color
       .addCase(addColor.fulfilled, (state, action) => {
         const addedColor: Color = action.payload;
         state.entities[addedColor.id] = addedColor;
         state.ids.push(addedColor.id);
+        state.notification = "Color added successfully!";
+      })
+      .addCase(addColor.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action?.error.message || "Failed to add color";
+        state.notification = state.error;
       })
       // Delete color
       .addCase(deleteColor.fulfilled, (state, action) => {
         const colorId = action.payload;
         delete state.entities[colorId];
         state.ids = state.ids.filter((id) => id !== colorId);
+        state.notification = "Color deleted successfully!";
       })
       .addCase(deleteColor.rejected, (state, action) => {
         state.status = "failed";
         state.error = action?.error.message || "Failed to delete color";
+        state.notification = state.error;
       });
   },
 });
 
+export const { clearNotification } = colorSlice.actions;  // Export the clearNotification action
 export const colorReducer = colorSlice.reducer;

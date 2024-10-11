@@ -15,7 +15,11 @@ export const fetchCategories = createAsyncThunk(
 export const addCategory = createAsyncThunk(
   "categories/addCategory",
   async (newCategory: Category) => {
-    const response = await updateJson(BASE_URL + "/categories", newCategory, "POST");
+    const response = await updateJson(
+      BASE_URL + "/categories",
+      newCategory,
+      "POST"
+    );
     return response;
   }
 );
@@ -24,7 +28,11 @@ export const addCategory = createAsyncThunk(
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async (category: Category) => {
-    const response = await updateJson(`${BASE_URL}/categories/${category.id}`, category, "PUT");
+    const response = await updateJson(
+      `${BASE_URL}/categories/${category.id}`,
+      category,
+      "PUT"
+    );
     return response;
   }
 );
@@ -39,15 +47,16 @@ export const deleteCategory = createAsyncThunk(
 );
 
 interface Category {
-  id: string; 
+  id: string;
   name: string;
 }
 
 interface CategoryState {
-  entities: Record<string, Category>; 
-  ids: string[]; 
+  entities: Record<string, Category>;
+  ids: string[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  notification: string | null;
 }
 
 const initialState: CategoryState = {
@@ -55,12 +64,17 @@ const initialState: CategoryState = {
   ids: [],
   status: "idle",
   error: null,
+  notification: null,
 };
 
 const categorySlice = createSlice({
   name: "categories",
   initialState,
-  reducers: {},
+  reducers: {
+    clearNotification: (state) => {
+      state.notification = null;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchCategories.pending, (state) => {
@@ -83,27 +97,38 @@ const categorySlice = createSlice({
         const addedCategory: Category = action.payload;
         state.entities[addedCategory.id] = addedCategory;
         state.ids.push(addedCategory.id);
+        state.notification = "Category added successfully!";
+      })
+      .addCase(addCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action?.error.message || "Failed to add category";
+        state.notification = state.error;
       })
       // Update category
       .addCase(updateCategory.fulfilled, (state, action) => {
         const updatedCategory: Category = action.payload;
         state.entities[updatedCategory.id] = updatedCategory;
+        state.notification = "Category updated successfully!"; 
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action?.error.message || "Failed to update category";
+        state.notification = state.error; 
       })
       // Delete category
       .addCase(deleteCategory.fulfilled, (state, action) => {
         const categoryId = action.payload;
         delete state.entities[categoryId];
         state.ids = state.ids.filter((id) => id !== categoryId);
+        state.notification = "Category deleted successfully!"; 
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action?.error.message || "Failed to delete category";
+        state.notification = state.error; 
       });
   },
 });
 
+export const { clearNotification } = categorySlice.actions;
 export const categoryReducer = categorySlice.reducer;

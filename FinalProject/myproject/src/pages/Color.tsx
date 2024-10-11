@@ -9,7 +9,12 @@ import { AppDispatch } from "../store";
 import { Button, ConfirmDialog, Notification } from "../components";
 import ClearIcon from "@mui/icons-material/Clear";
 import { TextField } from "@mui/material";
-import { addColorComponent, colorBody, colorItem, deleteColorItem } from "./styles";
+import {
+  addColorComponent,
+  colorBody,
+  colorItem,
+  deleteColorItem,
+} from "./styles";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 
 const Color = () => {
@@ -34,41 +39,52 @@ const Color = () => {
     }
   }, [status, dispatch]);
 
-  const handleAddColor = useCallback(() => {
-    if (newColor.trim()) {
-      const newColorId =
-        colorIds.length > 0
-          ? (Math.max(...colorIds.map(Number)) + 1).toString()
-          : "1";
-      dispatch(addColor({ id: newColorId, name: newColor }));
-      setNewColor("");
-      setNotification({
-        message: "Color added successfully!",
-        type: "success",
-      });
-    }
-  }, [colorIds, dispatch, newColor]);
-
-  const handleDeleteClick = useCallback((colorId: string) => {
-    setSelectedColorId(colorId);
-    setOpenDialog(true);
-  }, []);
+  const handleNotification = useCallback(
+    (message: string, type: "success" | "error") => {
+      setNotification({ message, type });
+    },
+    []
+  );
 
   const handleCloseDialog = useCallback(() => {
     setOpenDialog(false);
     setSelectedColorId(null);
   }, []);
 
-  const handleConfirmDelete = useCallback(() => {
+  const handleAddColor = useCallback(async (id?: string) => {
+    if (newColor.trim()) {
+      const newColorId =
+        colorIds.length > 0
+          ? (Math.max(...colorIds.map(Number)) + 1).toString()
+          : "1";
+      const resultAction = await dispatch(
+        addColor({ id: newColorId, name: newColor })
+      );
+      if (addColor.fulfilled.match(resultAction)) {
+        handleNotification("Color added successfully!", "success");
+      } else {
+        handleNotification("Failed to add color!", "error");
+      }
+      setNewColor("");
+    }
+  }, [colorIds, dispatch, newColor, handleNotification]);
+
+  const handleDeleteClick = useCallback((colorId: string) => {
+    setSelectedColorId(colorId);
+    setOpenDialog(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
     if (selectedColorId !== null) {
-      dispatch(deleteColor(selectedColorId));
-      setNotification({
-        message: "Color deleted successfully!",
-        type: "success",
-      });
+      const resultAction = await dispatch(deleteColor(selectedColorId));
+      if (deleteColor.fulfilled.match(resultAction)) {
+        handleNotification("Color deleted successfully!", "success");
+      } else {
+        handleNotification("Failed to delete color!", "error");
+      }
     }
     handleCloseDialog();
-  }, [selectedColorId, dispatch, handleCloseDialog]);
+  }, [selectedColorId, dispatch, handleCloseDialog, handleNotification]);
 
   const colorList = useMemo(() => {
     return colorIds.map((id: string) => (
@@ -94,16 +110,20 @@ const Color = () => {
       <div style={{ display: "flex" }}>
         <div style={colorBody}>{colorList}</div>
 
-        <div
-          style={addColorComponent}
-        >
+        <div style={addColorComponent}>
           <TextField
             value={newColor}
             onChange={(e) => setNewColor(e.target.value)}
             placeholder="Add a new color"
             style={{ marginRight: "10px" }}
           />
-          <Button variant="outlined" label="Add" color="success" startIcon={<AddToPhotosIcon />} onClick={handleAddColor} />
+          <Button
+            variant="outlined"
+            label="Add"
+            color="success"
+            startIcon={<AddToPhotosIcon />}
+            onClick={handleAddColor}
+          />
         </div>
       </div>
       <ConfirmDialog

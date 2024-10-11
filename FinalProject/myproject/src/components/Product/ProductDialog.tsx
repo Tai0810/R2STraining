@@ -60,6 +60,8 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
 
     const handleSubmit = useCallback(() => {
       console.log("Submitting product:", formData);
+      console.log("ID Type:", typeof formData.id);
+      console.log("Updated Product ID:", formData.id);
       onSubmit(formData);
       onClose();
     }, [formData, onSubmit, onClose]);

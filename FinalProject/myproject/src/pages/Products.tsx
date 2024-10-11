@@ -73,28 +73,6 @@ export default function Products() {
     type: "success" | "error";
   } | null>(null);
 
-  const handleDelete = useCallback((productId: any) => {
-    setProductIdToDelete(productId);
-    setOpenConfirmDialog(true);
-  }, []);
-
-  const handleConfirmDelete = useCallback(() => {
-    if (productIdToDelete) {
-      dispatch(deleteProduct(productIdToDelete));
-      setProductIdToDelete(null);
-      setOpenConfirmDialog(false);
-      setNotification({
-        message: "Product deleted successfully!",
-        type: "success",
-      });
-    }
-  }, [productIdToDelete, dispatch]);
-
-  const handleCloseDialog = useCallback(() => {
-    setOpenConfirmDialog(false);
-    // setSelectedProduct(null);
-  }, []);
-
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
@@ -103,8 +81,26 @@ export default function Products() {
     dispatch(fetchCategories());
   }, [status, dispatch]);
 
+  const handleNotification = useCallback(
+    (message: string, type: "success" | "error") => {
+      setNotification({ message, type });
+    },
+    []
+  );
+
+  const handleCloseDialog = useCallback(() => {
+    setSelectedProduct(null);
+    setOpenConfirmDialog(false);
+  }, []);
+
+  const handleAdd = useCallback(() => {
+    setDialogMode("add");
+    setSelectedProduct(null);
+    setOpenDialog(true);
+  }, []);
+
   const handleEdit = useCallback(
-    (productId: any) => {
+    (productId: number) => {
       setSelectedProduct(products[productId]);
       setDialogMode("edit");
       setOpenDialog(true);
@@ -113,61 +109,83 @@ export default function Products() {
   );
 
   const handleSave = useCallback(
-    (updatedProduct: any) => {
+    async (updatedProduct: any) => {
       const productToSave = {
         ...updatedProduct,
-        colorIds: updatedProduct.colorIds.map((colorId: any) =>
-          Number(colorId)
-        ),
+        colorIds: updatedProduct.colorIds.map((colorId: []) => Number(colorId)),
       };
 
       if (dialogMode === "add") {
         const maxId =
           productIds.length > 0 ? Math.max(...productIds.map(Number)) : 0;
         productToSave.id = (maxId + 1).toString();
-        dispatch(addProduct(productToSave));
-        setNotification({
-          message: "Product added successfully!",
-          type: "success",
-        });
+        const resultAction = await dispatch(addProduct(productToSave));
+        if (addProduct.fulfilled.match(resultAction)) {
+          handleNotification("Product added successfully!", "success");
+        } else {
+          handleNotification("Failed to add product!", "error");
+        }
       } else if (updatedProduct.id) {
         productToSave.id = updatedProduct.id.toString();
-        dispatch(updateProduct(productToSave));
-        setNotification({
-          message: "Product updated successfully!",
-          type: "success",
-        });
+        const resultAction = await dispatch(updateProduct(productToSave));
+        if (updateProduct.fulfilled.match(resultAction)) {
+          handleNotification("Product updated successfully!", "success");
+        } else {
+          handleNotification("Failed to update product!", "error");
+        }
       }
       setOpenDialog(false);
     },
-    [dispatch, dialogMode, productIds]
+    [dispatch, dialogMode, productIds, handleNotification]
   );
 
-  const handleAdd = useCallback(() => {
-    setDialogMode("add");
-    setOpenDialog(true);
+  const handleDelete = useCallback((productId: number) => {
+    setProductIdToDelete(productId);
+    setOpenConfirmDialog(true);
   }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (productIdToDelete) {
+      const resultAction = await dispatch(deleteProduct(productIdToDelete));
+
+      if (deleteProduct.fulfilled.match(resultAction)) {
+        setNotification({
+          message: "Product deleted successfully!",
+          type: "success",
+        });
+      } else {
+        setNotification({
+          message: "Failed to delete product",
+          type: "error",
+        });
+      }
+      setProductIdToDelete(null);
+      setOpenConfirmDialog(false);
+    }
+  }, [productIdToDelete, dispatch]);
 
   const totalAvailable = useMemo(() => {
     return productIds.reduce(
-      (acc: any, id: any) => acc + (products[id]?.available || 0),
+      (acc: number, id: string) => acc + (products[id]?.available || 0),
       0
     );
   }, [productIds, products]);
 
   const totalSold = useMemo(() => {
     return productIds.reduce(
-      (acc: any, id: any) => acc + (products[id]?.sold || 0),
+      (acc: number, id: string) => acc + (products[id]?.sold || 0),
       0
     );
   }, [productIds, products]);
 
   const revenue = useMemo(() => {
-    return productIds.reduce(
-      (acc: any, id: any) =>
-        acc + (products[id]?.price * products[id]?.sold || 0),
-      0
-    );
+    return productIds
+      .reduce(
+        (acc: number, id: string) =>
+          acc + (products[id]?.price * products[id]?.sold || 0),
+        0
+      )
+      .toLocaleString();
   }, [productIds, products]);
 
   const totalProducts = useMemo(() => productIds.length, [productIds]);
