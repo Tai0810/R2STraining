@@ -1,11 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  MenuProps,
+} from "@mui/material";
 import { validateProductForm } from "../../util/validation";
 
 interface Product {
@@ -96,6 +102,15 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
       });
     }, [colorArray, formData.colorIds, handleColorToggle]);
 
+    const menuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: 48 * 5, // Chiều cao tối đa cho 5 mục
+          overflowY: "auto" as "auto", // Ép kiểu cho TypeScript
+        },
+      },
+    };
+
     return (
       <Dialog open={open} onClose={onClose}>
         <DialogTitle>{product ? "Edit Product" : "Add Product"}</DialogTitle>
@@ -134,10 +149,12 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
           <FormControl fullWidth margin="dense">
             <InputLabel>Category</InputLabel>
             <Select
+              label="Category"
               value={formData.categoryId}
               onChange={(e) =>
                 setFormData({ ...formData, categoryId: +e.target.value })
               }
+              MenuProps={menuProps} // Sử dụng menuProps mà không cần khai báo kiểu rõ ràng
             >
               {renderedCategories}
             </Select>
@@ -171,4 +188,4 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
   }
 );
 
-export default ProductDialog;
+export default memo(ProductDialog);

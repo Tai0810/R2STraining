@@ -98,3 +98,9 @@ export const addColorComponent = {
   width: "30%",
   alignItems: "center",
 };
+
+export const categoryAddComponent = {
+  display: "flex",
+  justifyContent: "flex-end",
+  marginBottom: "10px",
+};

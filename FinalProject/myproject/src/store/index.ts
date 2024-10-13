@@ -10,13 +10,14 @@ import { categoryReducer } from "./reducers/categoryReducer";
 const persistConfig = {
   key: "root",
   storage,
+  blacklist: ["product"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
   product: productReducer,
   color: colorReducer,
-  category: categoryReducer
+  category: categoryReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

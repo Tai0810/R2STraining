@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { TextField } from "@mui/material";
 import { Button } from "..";
 import { rowCategoryList, rowButtonCategoryList } from "../styles";
@@ -35,4 +35,4 @@ const CategoryInput: React.FC<CategoryInputProps> = ({
   );
 };
 
-export default CategoryInput;
+export default memo(CategoryInput);

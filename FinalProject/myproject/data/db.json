@@ -23,10 +23,6 @@
     {
       "id": "5",
       "name": "Shirt"
-    },
-    {
-      "id": "6",
-      "name": "New"
     }
   ],
   "colors": [
@@ -64,7 +60,7 @@
       "categoryId": 1,
       "colorIds": [
         1,
-        4
+        6
       ],
       "price": 500000
     },
@@ -73,7 +69,7 @@
       "name": "Trouser with tie",
       "available": 4,
       "sold": 2,
-      "categoryId": 1,
+      "categoryId": 3,
       "colorIds": [
         2,
         3
@@ -87,7 +83,7 @@
       "sold": 7,
       "categoryId": 2,
       "colorIds": [
-        5
+        6
       ],
       "price": 370000
     },
@@ -107,59 +103,25 @@
       "name": "Silver necklace",
       "available": 20,
       "sold": 20,
-      "categoryId": 3,
+      "categoryId": 4,
       "colorIds": [
         6,
-        5
+        4
       ],
-      "price": 1450000
+      "price": 15000000
     },
     {
       "id": "6",
-      "name": "Nike",
-      "available": 2,
-      "sold": 6,
-      "categoryId": 3,
-      "colorIds": [
-        4,
-        3,
-        5
-      ],
-      "price": 1600000
-    },
-    {
-      "id": "8",
-      "name": "Silver necklace",
-      "available": 20,
-      "sold": 25,
-      "categoryId": 3,
-      "colorIds": [
-        2
-      ],
-      "price": 1450000
-    },
-    {
-      "id": "9",
-      "name": "CD Shop",
+      "name": "Hoodie",
       "available": 3,
-      "sold": 4,
-      "categoryId": 2,
+      "sold": 7,
+      "categoryId": 5,
       "colorIds": [
-        5
+        1,
+        3,
+        6
       ],
-      "price": 5000000
-    },
-    {
-      "id": "10",
-      "name": "aa",
-      "available": 2,
-      "sold": 2,
-      "categoryId": 0,
-      "colorIds": [
-        5,
-        4
-      ],
-      "price": 2
+      "price": 250000
     }
   ]
 }

@@ -24,7 +24,8 @@ import {
   fetchCategories,
   updateCategory,
 } from "../store/reducers/categoryReducer";
-import { validateName } from "../util/validation";
+import { validateString } from "../util/validation";
+import { categoryAddComponent } from "./styles";
 
 const ITEMS_PER_PAGE = 5;
 const headers = [{ text: "No" }, { text: "Name" }, { text: "" }];
@@ -73,9 +74,9 @@ const Categories = () => {
     setSelectedCategoryId(null);
   }, []);
 
-  const handleAddCategory = () => {
+  const handleAddCategory = useCallback(() => {
     setIsAdding(true);
-  };
+  }, []);
 
   const handleEdit = useCallback(
     (id: string) => {
@@ -88,7 +89,9 @@ const Categories = () => {
   const handleSave = useCallback(
     async (id?: string) => {
       const nameToValidate = id ? editName : newCategoryName;
-      const error = validateName(nameToValidate, "category");
+      const validateFn = validateString("Category", 20);
+      const error = validateFn(nameToValidate);
+
       if (error) {
         alert(error);
         return;
@@ -132,12 +135,17 @@ const Categories = () => {
     setNewCategoryName("");
   }, []);
 
-  const handleDeleteClick = useCallback((id: string) => {
-    // const count = products.filter((product: any) => product.categoryId === id).length;
-    // setProductCount(count);
-    setSelectedCategoryId(id);
-    setOpenDialog(true);
-  }, []);
+  const handleDeleteClick = useCallback(
+    (id: string) => {
+      const count = Object.values(products).filter((product: any) => {
+        return String(product.categoryId) === String(id);
+      }).length;
+      setProductCount(count);
+      setSelectedCategoryId(id);
+      setOpenDialog(true);
+    },
+    [products]
+  );
 
   const handleConfirmDelete = useCallback(async () => {
     if (selectedCategoryId) {
@@ -169,11 +177,7 @@ const Categories = () => {
       )}
       <h1>Categories List</h1>
       <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: "10px",
-        }}
+        style={categoryAddComponent}
       >
         <Button
           label="Add"

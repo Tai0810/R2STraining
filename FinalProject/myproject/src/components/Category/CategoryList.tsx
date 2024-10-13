@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import CategoryRow from "./CategoryRow";
 import CategoryInput from "./CategoryInput";
 import { TableRow, TableCell } from "@mui/material";
@@ -69,4 +69,4 @@ const CategoryList: React.FC<CategoryListProps> = ({
   );
 };
 
-export default CategoryList;
+export default memo(CategoryList);

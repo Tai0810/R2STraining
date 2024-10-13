@@ -51,3 +51,26 @@ export const errorStyle: React.CSSProperties = {
   color: "white",
 };
 
+export const numFieldTable: React.CSSProperties = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  maxWidth: 150,
+};
+
+export const textFieldTable: React.CSSProperties = {
+  whiteSpace: "normal",
+  wordWrap: "break-word",
+};
+
+export const tableStyle: React.CSSProperties = {
+  tableLayout: "fixed",
+  width: "100%",
+};
+
+export const fixedCellStyle: React.CSSProperties = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  maxWidth: 100,
+};

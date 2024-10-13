@@ -25,12 +25,11 @@ import {
   Notification,
   PaginationControl,
   ProductDialog,
-  TableBody,
+  ProductList,
 } from "../components";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { fetchColors } from "../store/reducers/colorReducer";
 import { fetchCategories } from "../store/reducers/categoryReducer";
-import { Navigate } from "react-router-dom";
 
 const headers = [
   { text: "No" },
@@ -66,6 +65,7 @@ export default function Products() {
   const [productIdToDelete, setProductIdToDelete] = useState<number | null>(
     null
   );
+  const [originalProduct, setOriginalProduct] = useState<any>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(productIds.length / ITEMS_PER_PAGE);
@@ -90,19 +90,30 @@ export default function Products() {
   );
 
   const handleCloseDialog = useCallback(() => {
-    setSelectedProduct(null);
     setOpenConfirmDialog(false);
+    setSelectedProduct(null);
+    setOriginalProduct(null);
   }, []);
 
   const handleAdd = useCallback(() => {
     setDialogMode("add");
-    setSelectedProduct(null);
+    setSelectedProduct({
+      id: "",
+      name: "",
+      available: 0,
+      sold: 0,
+      price: 0,
+      colorIds: [], 
+      categoryId: 1,
+    });
     setOpenDialog(true);
   }, []);
 
   const handleEdit = useCallback(
     (productId: number) => {
-      setSelectedProduct(products[productId]);
+      const productToEdit = products[productId];
+      setOriginalProduct({ ...productToEdit });
+      setSelectedProduct(productToEdit);
       setDialogMode("edit");
       setOpenDialog(true);
     },
@@ -135,6 +146,7 @@ export default function Products() {
           handleNotification("Failed to update product!", "error");
         }
       }
+      setSelectedProduct(null); 
       setOpenDialog(false);
     },
     [dispatch, dialogMode, productIds, handleNotification]
@@ -233,11 +245,13 @@ export default function Products() {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody
+          <ProductList
             products={products}
             productIds={currentProducts}
             categories={categories}
             colors={colors}
+            currentPage={currentPage}
+            itemsPerPage={ITEMS_PER_PAGE}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />
@@ -261,7 +275,10 @@ export default function Products() {
 
       <ProductDialog
         open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        onClose={() => {
+          setOpenDialog(false);
+          handleCloseDialog();
+        }}
         onSubmit={handleSave}
         product={selectedProduct}
         categories={categories || []}

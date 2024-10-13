@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
-import TableRowComponent from "./TableRowComponent";
+import ProductRow from "./ProductRow";
 
-const TableBody: React.FC<any> = ({
+const ProductList: React.FC<any> = ({
   products,
   productIds,
   categories,
+  currentPage,
+  itemsPerPage,
   colors,
   onEdit,
   onDelete,
@@ -41,10 +43,10 @@ const TableBody: React.FC<any> = ({
         const colorNames = getColorNamesById(product.colorIds || []);
 
         return (
-          <TableRowComponent
+          <ProductRow
             key={id}
             product={product}
-            index={index}
+            index={index + (currentPage - 1) * itemsPerPage}
             category={category}
             colors={colorNames}
             onEdit={onEdit}
@@ -56,4 +58,4 @@ const TableBody: React.FC<any> = ({
   );
 };
 
-export default TableBody;
+export default ProductList;

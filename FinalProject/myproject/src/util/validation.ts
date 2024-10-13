@@ -42,16 +42,13 @@ export const validateProductForm = (product: Product): string | null => {
   return null;
 };
 
-export const validateName = (name: string, type: "category" | "color"): string | null => {
-  const isCategory = type === "category";
-  
-  if (!name.trim()) {
-    return `${isCategory ? 'Category' : 'Color'} name is required`;
-  }
-  
-  if ((isCategory && name.length > 20) || (!isCategory && name.length > 10)) {
-    return `${isCategory ? 'Category' : 'Color'} name must be less than ${isCategory ? 20 : 10} characters`;
-  }
-  
-  return null;
+export const validateString = function (label: string, length: number) {
+  return function (str: string) {
+    if (!str.trim()) {
+      return `${label} name is required`;
+    }
+    if (str.length > length) {
+      return `${label} name must be less than ${length} characters`;
+    }
+  };
 };

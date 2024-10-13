@@ -16,7 +16,7 @@ import {
   deleteColorItem,
 } from "./styles";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import { validateName } from "../util/validation";
+import { validateString } from "../util/validation";
 
 const Color = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,10 +25,14 @@ const Color = () => {
     ids: colorIds = [],
     status,
   } = useSelector((state: any) => state.color);
+  const { entities: products = [] } = useSelector(
+    (state: any) => state.product
+  );
 
   const [newColor, setNewColor] = useState("");
   const [selectedColorId, setSelectedColorId] = useState<string | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [productCount, setProductCount] = useState(0);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -52,33 +56,46 @@ const Color = () => {
     setSelectedColorId(null);
   }, []);
 
-  const handleAddColor = useCallback(async (id?: string) => {
-    const error = validateName(newColor, "color");
+  const handleAddColor = useCallback(
+    async (id?: string) => {
+      const validateFn = validateString("Color", 10);
+      const error = validateFn(newColor);
+
       if (error) {
         alert(error);
         return;
       }
-    if (newColor.trim()) {
-      const newColorId =
-        colorIds.length > 0
-          ? (Math.max(...colorIds.map(Number)) + 1).toString()
-          : "1";
-      const resultAction = await dispatch(
-        addColor({ id: newColorId, name: newColor })
-      );
-      if (addColor.fulfilled.match(resultAction)) {
-        handleNotification("Color added successfully!", "success");
-      } else {
-        handleNotification("Failed to add color!", "error");
+      if (newColor.trim()) {
+        const newColorId =
+          colorIds.length > 0
+            ? (Math.max(...colorIds.map(Number)) + 1).toString()
+            : "1";
+        const resultAction = await dispatch(
+          addColor({ id: newColorId, name: newColor })
+        );
+        if (addColor.fulfilled.match(resultAction)) {
+          handleNotification("Color added successfully!", "success");
+        } else {
+          handleNotification("Failed to add color!", "error");
+        }
+        setNewColor("");
       }
-      setNewColor("");
-    }
-  }, [colorIds, dispatch, newColor, handleNotification]);
+    },
+    [colorIds, dispatch, newColor, handleNotification]
+  );
 
-  const handleDeleteClick = useCallback((colorId: string) => {
-    setSelectedColorId(colorId);
-    setOpenDialog(true);
-  }, []);
+  const handleDeleteClick = useCallback(
+    (id: string) => {
+      const count = Object.values(products).filter((product: any) => {
+        return product.colorIds && product.colorIds.includes(Number(id));
+      }).length;
+
+      setProductCount(count);
+      setSelectedColorId(id);
+      setOpenDialog(true);
+    },
+    [products]
+  );
 
   const handleConfirmDelete = useCallback(async () => {
     if (selectedColorId !== null) {
@@ -137,7 +154,7 @@ const Color = () => {
         onClose={handleCloseDialog}
         onConfirm={handleConfirmDelete}
         title="Confirm Deletion"
-        message="Are you sure you want to delete this color?"
+        message={`This color is being used by ${productCount} product(s). Are you sure you want to delete it?`}
       />
     </div>
   );

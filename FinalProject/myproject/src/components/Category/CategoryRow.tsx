@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { TableRow, TableCell } from "@mui/material";
 import { Button } from "..";
 import EditIcon from "@mui/icons-material/Edit";
@@ -73,4 +73,4 @@ const CategoryRow: React.FC<CategoryRowProps> = ({
   );
 };
 
-export default CategoryRow;
+export default memo(CategoryRow);
