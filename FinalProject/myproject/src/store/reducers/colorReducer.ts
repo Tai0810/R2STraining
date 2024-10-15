@@ -36,7 +36,7 @@ interface ColorState {
   ids: string[]; 
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-  notification: string | null;  // Added notification
+  notification: string | null;
 }
 
 const initialState: ColorState = {
@@ -44,7 +44,7 @@ const initialState: ColorState = {
   ids: [],
   status: "idle",
   error: null,
-  notification: null,  // Initial notification set to null
+  notification: null,
 };
 
 const colorSlice = createSlice({
@@ -52,7 +52,7 @@ const colorSlice = createSlice({
   initialState,
   reducers: {
     clearNotification: (state) => {
-      state.notification = null;  // Action to clear notification
+      state.notification = null;
     },
   },
   extraReducers(builder) {
@@ -101,5 +101,5 @@ const colorSlice = createSlice({
   },
 });
 
-export const { clearNotification } = colorSlice.actions;  // Export the clearNotification action
+export const { clearNotification } = colorSlice.actions; 
 export const colorReducer = colorSlice.reducer;

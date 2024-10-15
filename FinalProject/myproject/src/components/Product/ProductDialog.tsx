@@ -10,7 +10,6 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  MenuProps,
 } from "@mui/material";
 import { validateProductForm } from "../../util/validation";
 
@@ -105,8 +104,8 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
     const menuProps = {
       PaperProps: {
         style: {
-          maxHeight: 48 * 5, // Chiều cao tối đa cho 5 mục
-          overflowY: "auto" as "auto", // Ép kiểu cho TypeScript
+          maxHeight: 48 * 5, 
+          overflowY: "auto" as "auto",
         },
       },
     };
@@ -154,7 +153,7 @@ const ProductDialog: React.FC<ProductDialogProps> = React.memo(
               onChange={(e) =>
                 setFormData({ ...formData, categoryId: +e.target.value })
               }
-              MenuProps={menuProps} // Sử dụng menuProps mà không cần khai báo kiểu rõ ràng
+              MenuProps={menuProps}
             >
               {renderedCategories}
             </Select>

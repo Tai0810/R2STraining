@@ -93,6 +93,7 @@ export default function Products() {
     setOpenConfirmDialog(false);
     setSelectedProduct(null);
     setOriginalProduct(null);
+    setDialogMode("add");
   }, []);
 
   const handleAdd = useCallback(() => {

@@ -47,27 +47,27 @@
       "name": "blue"
     },
     {
-      "id": "6",
-      "name": "silver"
+      "id": "7",
+      "name": "red"
+    },
+    {
+      "id": "8",
+      "name": "green"
+    },
+    {
+      "id": "9",
+      "name": "grey"
+    },
+    {
+      "id": "10",
+      "name": "puple"
     }
   ],
   "products": [
     {
-      "id": "1",
-      "name": "T-shirt long sleeve update",
-      "available": 23,
-      "sold": 10,
-      "categoryId": 1,
-      "colorIds": [
-        1,
-        6
-      ],
-      "price": 500000
-    },
-    {
       "id": "2",
-      "name": "Trouser with tie",
-      "available": 4,
+      "name": "Trouser with tie 22222222222222222222222222222222222222",
+      "available": 0,
       "sold": 2,
       "categoryId": 3,
       "colorIds": [
@@ -79,7 +79,7 @@
     {
       "id": "3",
       "name": "Backpack Elsa",
-      "available": 100,
+      "available": 10000000000,
       "sold": 7,
       "categoryId": 2,
       "colorIds": [
@@ -94,7 +94,7 @@
       "sold": 1,
       "categoryId": 2,
       "colorIds": [
-        3
+        1
       ],
       "price": 1450000
     },
@@ -108,20 +108,18 @@
         6,
         4
       ],
-      "price": 15000000
+      "price": 1500000
     },
     {
       "id": "6",
-      "name": "Hoodie",
-      "available": 3,
-      "sold": 7,
-      "categoryId": 5,
+      "name": "CD Shop",
+      "available": 4,
+      "sold": 4,
+      "categoryId": 3,
       "colorIds": [
-        1,
-        3,
-        6
+        1
       ],
-      "price": 250000
+      "price": 10000000
     }
   ]
 }
